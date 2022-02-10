@@ -8,13 +8,17 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.Subsystems.Mechanism1;
-import edu.wpi.first.wpilibj.PowerDistribution;
+
+
+//import frc.Subsystems.Mechanism1;
+//import edu.wpi.first.wpilibj.PowerDistribution;
 
 //import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+//import edu.wpi.first.hal.FRCNetComm.tResourceType;
+//import edu.wpi.first.hal.HAL;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,7 +36,7 @@ public class Robot extends TimedRobot {
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
     private Joystick leftControl;
    // private Joystick rightControl;
-    private Mechanism1 mechanism1;
+    //private Mechanism1 mechanism1;
     private CANSparkMax leftDrive;
     private CANSparkMax rightDrive;
     //private PowerDistribution distro;
@@ -108,14 +112,22 @@ public class Robot extends TimedRobot {
         //m_autoSelected = m_chooser.getSelected();
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         //System.out.println("Auto selected: " + m_autoSelected);
-       // mechanism1.turn(2.1);
+    int milli = 10000000; // This should run 1000ms = 1 s.
+       for(int i=milli;i>=0; i--){
+            // Place your code here.
+            Auton.move(2.1);
+
+       }
+       Auton.move(0);
+            
+        }
+       
         //distro.clearStickyFaults();
         
 
    
 
-    }
-
+    
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
