@@ -39,10 +39,13 @@ public class Robot extends TimedRobot {
     //private Mechanism1 mechanism1;
     private CANSparkMax leftDrive;
     private CANSparkMax rightDrive;
+    private CANSparkMax leftDrive2;
+    private CANSparkMax rightDrive2;
+    //private XboxController driverXbox = new XboxController(1);
     //private PowerDistribution distro;
 
    // private DifferentialDrive robotDrive;
-    
+   private Joystick driverControl1;
     
 
     /**
@@ -59,11 +62,13 @@ public class Robot extends TimedRobot {
        // rightControl = new Joystick(1);
         //mechanism1 = new Mechanism1(1);
         
-        
-        leftDrive = new CANSparkMax(2, MotorType.kBrushless);
+        driverControl1 = new Joystick(1);
+        leftDrive = new CANSparkMax(3, MotorType.kBrushless);
         leftDrive.restoreFactoryDefaults();
+        leftDrive2 = new CANSparkMax(5, MotorType.kBrushless);
 
-        rightDrive = new CANSparkMax(3 ,MotorType.kBrushless);
+        rightDrive = new CANSparkMax(4 ,MotorType.kBrushless);
+        rightDrive2 = new CANSparkMax(2 ,MotorType.kBrushless);
         rightDrive.restoreFactoryDefaults();
        // rightDrive.setInverted(true);
 
@@ -152,6 +157,18 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         //double mechanismSpeed = 0.65 * Util.state(leftControl.getRawButton(1), leftControl.getRawButton(0));
         //mechanism1.turn(mechanismSpeed);
+        double speed = -driverControl1.getRawAxis(1)*0.6;
+        double turn = driverControl1.getRawAxis(4);
+
+        double leftPower = speed +turn;
+        double rightPower = speed - turn;
+
+        leftDrive.set(leftPower);
+        leftDrive2.set(leftPower);
+
+        rightDrive.set(rightPower);
+        rightDrive2.set(rightPower);
+
 
     }
 
