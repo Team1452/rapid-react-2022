@@ -160,7 +160,7 @@ public class Robot extends TimedRobot {
         double speed = -driverControl1.getRawAxis(1)*0.6;
         double turn = driverControl1.getRawAxis(4);
 
-        double leftPower = speed +turn;
+        double leftPower = speed + turn;
         double rightPower = speed - turn;
 
         leftDrive.set(leftPower);
@@ -196,3 +196,4 @@ public class Robot extends TimedRobot {
         System.out.println("Hello");
     }
 }
+    
