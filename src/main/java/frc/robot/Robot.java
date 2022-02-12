@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
         double speed = -Math.pow(driverControl1.getLeftY(), 3)*0.6;
         double turn = Math.pow(driverControl1.getLeftX(), 3);
 
-        double leftPower = speed +turn;
+        double leftPower = speed + turn;
         double rightPower = speed - turn;
 
         leftDrive.set(leftPower);
@@ -203,3 +203,4 @@ public class Robot extends TimedRobot {
         // rightDrive.set(driverControl1.getLeftY() - driverControl1.getLeftX());
     }
 }
+    
