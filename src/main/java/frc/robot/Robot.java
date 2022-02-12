@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.lang.Math;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -162,8 +163,8 @@ public class Robot extends TimedRobot {
         //double mechanismSpeed = 0.65 * Util.state(leftControl.getRawButton(1), leftControl.getRawButton(0));
         //mechanism1.turn(mechanismSpeed);
         
-        double speed = -driverControl1.getLeftY()*0.6;
-        double turn = driverControl1.getLeftX();
+        double speed = -Math.pow(driverControl1.getLeftY(), 3)*0.6;
+        double turn = Math.pow(driverControl1.getLeftX(), 3);
 
         double leftPower = speed +turn;
         double rightPower = speed - turn;
