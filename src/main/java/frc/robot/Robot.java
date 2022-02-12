@@ -4,11 +4,11 @@
 
 package frc.robot;
 
+import java.lang.Math;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 
 //import frc.Subsystems.Mechanism1;
@@ -35,19 +35,18 @@ public class Robot extends TimedRobot {
     private static final String kCustomAuto = "My Auto";
     //private String m_autoSelected;
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
-    private Joystick leftControl;
+    //private Joystick leftControl;
    // private Joystick rightControl;
     //private Mechanism1 mechanism1;
     private CANSparkMax leftDrive;
     private CANSparkMax rightDrive;
     private CANSparkMax leftDrive2;
     private CANSparkMax rightDrive2;
-    //private XboxController driverXbox = new XboxController(1);
+    //private XboxController driverControl1 = new XboxController(0);
     //private PowerDistribution distro;
 
-   // private DifferentialDrive robotDrive;
-   private Joystick driverControl1;
-    
+    // private DifferentialDrive robotDrive;
+    private final XboxController driverControl1 = new XboxController(0);
 
     /**
      * This function is run when the robot is first started up and should be used
@@ -59,19 +58,24 @@ public class Robot extends TimedRobot {
         m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
         m_chooser.addOption("My Auto", kCustomAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
-        leftControl = new Joystick(0);
+        //leftControl = new Joystick(0);
        // rightControl = new Joystick(1);
         //mechanism1 = new Mechanism1(1);
         
-        driverControl1 = new Joystick(1);
         leftDrive = new CANSparkMax(3, MotorType.kBrushless);
-        leftDrive.restoreFactoryDefaults();
         leftDrive2 = new CANSparkMax(5, MotorType.kBrushless);
-
         rightDrive = new CANSparkMax(4 ,MotorType.kBrushless);
         rightDrive2 = new CANSparkMax(2 ,MotorType.kBrushless);
+        leftDrive.restoreFactoryDefaults();
+        leftDrive2.restoreFactoryDefaults();
         rightDrive.restoreFactoryDefaults();
+        rightDrive2.restoreFactoryDefaults();
+        leftDrive2.follow(leftDrive);
+        rightDrive2.follow(rightDrive);
+        leftDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        rightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
        // rightDrive.setInverted(true);
+
 
       // robotDrive = new DifferentialDrive(leftDrive, rightDrive);
 
@@ -158,17 +162,18 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         //double mechanismSpeed = 0.65 * Util.state(leftControl.getRawButton(1), leftControl.getRawButton(0));
         //mechanism1.turn(mechanismSpeed);
-        double speed = -driverControl1.getRawAxis(1)*0.6;
-        double turn = driverControl1.getRawAxis(4);
+        
+        double speed = -Math.pow(driverControl1.getLeftY(), 3)*0.6;
+        double turn = Math.pow(driverControl1.getLeftX(), 3);
 
         double leftPower = speed + turn;
         double rightPower = speed - turn;
 
         leftDrive.set(leftPower);
-        leftDrive2.set(leftPower);
+        //leftDrive2.set(leftPower);
 
-        rightDrive.set(rightPower);
-        rightDrive2.set(rightPower);
+        rightDrive.set(-rightPower);
+        //rightDrive2.set(-rightPower);
 
 
     }
@@ -192,9 +197,10 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
-        leftDrive.set(leftControl.getY() + leftControl.getX());
-        rightDrive.set(leftControl.getY() - leftControl.getX());
-        System.out.println("Hello");
+        rightDrive.set(0.5);
+        System.out.println(driverControl1.getLeftY());
+        // leftDrive.set(driverControl1.getLeftY() + driverControl1.getLeftX());
+        // rightDrive.set(driverControl1.getLeftY() - driverControl1.getLeftX());
     }
 }
     
