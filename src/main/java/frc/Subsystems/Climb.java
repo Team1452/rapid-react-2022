@@ -1,23 +1,31 @@
 package frc.subsystems;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import frc.robot.RobotMap;
 
 public class Climb {
-    private static int LIMIT_LEFT_PORT = 10;
-    private static int LIMIT_RIGHT_PORT = 10;
+    // limit switches
+    private DigitalInput limitLeft;
+    private DigitalInput limitRight;
 
-    private DigitalInput limitLeft = new DigitalInput(LIMIT_LEFT_PORT);
-    private DigitalInput limitRight = new DigitalInput(LIMIT_RIGHT_PORT);
-    private static Climb instance;
+    // motors
+    private CANSparkMax gondolaMotor;
+    private CANSparkMax motor;
 
-    private Climb(CANSparkMax leftMotor, CANSparkMax rightMotor) {
-           leftMotor.follow(rightMotor);
+    private static Climb instance = new Climb();
+
+    private Climb() {
+        limitLeft = new DigitalInput(RobotMap.CLIMB_LIMIT_LEFT);
+        limitRight = new DigitalInput(RobotMap.CLIMB_LIMIT_RIGHT);
+
+        gondolaMotor = new CANSparkMax(RobotMap.CLIMB_GONDOLA_MOTOR, MotorType.kBrushless);
+        motor = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
     }
 
-    public static Climb getInstance() {
-        return instance;
-    }
+    public static Climb getInstance() { return instance; }
 
     private void extend() {
 

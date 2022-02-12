@@ -1,36 +1,36 @@
 package frc.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
 public class Intake {
-    private int position = 0;
-    private CANSparkMax lift, intake;
-    private boolean isOn = false;
-   public Intake(CANSparkMax lift, CANSparkMax intake){
+    private static liftPosition position = liftPosition.LOW;
+    private static CANSparkMax lift, intake;
+    private static boolean isOn = false;
+    private static Intake instance = new Intake(lift, intake);
+
+    private Intake(CANSparkMax lift, CANSparkMax intake) {
         this.lift = lift;
         this.intake = intake;
-   }
-
-    public static Intake getInstance() {
-        return instance;
     }
 
-   public void setIntakeState(boolean x){ //set Intake to state x
-        isOn = x;
-        if(isOn){
-            intake.set(1);
-        }
-   }
-   public boolean getIntakeState(){
+    public Intake getInstance() {
+        return instance;
+    }
+    
+    public void setIntakeState(boolean isOn) { //set Intake to state x
+        this.isOn;
+        intake.set(isOn ? 1 : 0);
+    }
+
+    public boolean getIntakeState() {
         return isOn;
-   }
-   public void setLiftPosition(int desiredPos){
+    }
+
+    public void setLiftPosition(liftPosition desiredPos) {
         position = desiredPos;
-   }
-   public void Output(){ //bring lift to correct pos and output balls
-        if(isOn){
-            isOn = false;
-        }
-        
-   }
+    }
+
+    public void Output() { //bring lift to correct pos and output balls
+        setIntakeState(false);
+        setLiftPosition(liftPosition.HIGH);
+    }
 }
