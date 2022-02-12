@@ -1,27 +1,33 @@
 package frc.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import frc.robot.RobotMap;
 public class Intake {
-    private static liftPosition position = liftPosition.LOW;
-    private static CANSparkMax lift, intake;
-    private static boolean isOn = false;
-    private static Intake instance = new Intake(lift, intake);
+    // motors
+    private final CANSparkMax lift, intake;
 
-    private Intake(CANSparkMax lift, CANSparkMax intake) {
-        this.lift = lift;
-        this.intake = intake;
-    }
+    // intake state
+    private liftPosition position;
+    private boolean isOn = false;
 
-    public Intake getInstance() {
-        return instance;
+    // singleton instance
+    private static final Intake instance = new Intake();
+
+    public Intake getInstance() { return instance; }
+
+    private Intake() {
+        lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushless);
+        intake = new CANSparkMax(RobotMap.INTAKE_MOTOR_INTAKE, MotorType.kBrushless);
     }
     
-    public void setIntakeState(boolean isOn) { //set Intake to state x
-        this.isOn;
+    public void setIntakeState(boolean on) { //set Intake to state x
+        isOn = on;
         intake.set(isOn ? 1 : 0);
     }
 
-    public boolean getIntakeState() {
+    public boolean isOn() {
         return isOn;
     }
 
@@ -29,7 +35,7 @@ public class Intake {
         position = desiredPos;
     }
 
-    public void Output() { //bring lift to correct pos and output balls
+    public void output() { //bring lift to correct pos and output balls
         setIntakeState(false);
         setLiftPosition(liftPosition.HIGH);
     }

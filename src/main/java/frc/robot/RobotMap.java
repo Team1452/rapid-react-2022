@@ -4,6 +4,7 @@ public class RobotMap {
     // intake switches
     public static final int CLIMB_LIMIT_LEFT = 1;     
     public static final int CLIMB_LIMIT_RIGHT = 1;
+    public static final int CLIMB_LIMIT_CALIBRATE = 1;
 
     // intake motors
     // TODO: figure out tf the intake does (charlie)
