@@ -157,11 +157,11 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         //double mechanismSpeed = 0.65 * Util.state(leftControl.getRawButton(1), leftControl.getRawButton(0));
         //mechanism1.turn(mechanismSpeed);
-        double speed = -driverControl1.getRawAxis(1)*0.6;
-        double turn = driverControl1.getRawAxis(4);
+        double turn = driverControl1.getRawAxis(0)*0.25;
+        double speed = driverControl1.getRawAxis(5)*-0.5;
 
-        double leftPower = speed +turn;
-        double rightPower = speed - turn;
+        double leftPower = turn+speed;
+        double rightPower = turn -speed;
 
         leftDrive.set(leftPower);
         leftDrive2.set(leftPower);
