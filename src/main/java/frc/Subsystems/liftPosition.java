@@ -1,6 +1,6 @@
 package frc.subsystems;
 
-public enum liftPosition{
+public enum LiftPosition {
     HIGH,
     MID,
     LOW 

@@ -1,13 +1,11 @@
 package frc.subsystems;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.RobotMap;
 
 public class Climb {
@@ -31,9 +29,11 @@ public class Climb {
         motor = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
     }
 
-    public static Climb getInstance() { return instance; }
+    public static Climb getInstance() {
+        return instance;
+    }
 
-    private void calibrateGondola(){
+    private void calibrateGondola() {
         gondolaMotor.set(-0.5);
 
         while (!limitCalibrate.get()) {
@@ -45,22 +45,21 @@ public class Climb {
         }
     }
 
-    private void extendGondola(){
-        gondolaMotor.set(1);        
+    private void extendGondola() {
+        gondolaMotor.set(1);
 
         final RelativeEncoder encoder = gondolaMotor.getEncoder();
         final SparkMaxPIDController pid = gondolaMotor.getPIDController();
 
-        double 
-            initial = encoder.getPosition(),
-            target = 1000, // magic number for revolutions to full extension
-            position, 
-            proportional;
+        double initial = encoder.getPosition(),
+                target = 1000, // magic number for revolutions to full extension
+                position,
+                proportional;
 
         while (!limitLeft.get() && !limitRight.get()) {
-            //encoder.setP(RobotMap.GONDOLA_PID_SETTINGS);
+            // encoder.setP(RobotMap.GONDOLA_PID_SETTINGS);
 
-            //gondolaMotor.set(proportional);
+            // gondolaMotor.set(proportional);
 
             try {
                 Thread.sleep(10);
@@ -71,9 +70,9 @@ public class Climb {
     }
 
     /*
-        extend and push down
-        extend gondola until lim switch
-        raise about 2 inches up
-        traverse gondola until lim switch
-    */
+     * extend and push down
+     * extend gondola until lim switch
+     * raise about 2 inches up
+     * traverse gondola until lim switch
+     */
 }

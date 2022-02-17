@@ -17,6 +17,8 @@ public class RobotMap {
     public static final int DRIVETRAIN_MOTOR_FRONT_LEFT = 3;     
     public static final int DRIVETRAIN_MOTOR_FRONT_RIGHT = 4;     
 
+    public static final int XBOX_CONTROLLER = 1;
+
     // climb
     public static final int CLIMB_GONDOLA_MOTOR = 1;
     public static final int CLIMB_MOTOR = 1;     

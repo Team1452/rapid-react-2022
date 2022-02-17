@@ -9,7 +9,7 @@ public class Intake {
     private final CANSparkMax lift, intake;
 
     // intake state
-    private liftPosition position;
+    private LiftPosition position;
     private boolean isOn = false;
 
     // singleton instance
@@ -31,12 +31,12 @@ public class Intake {
         return isOn;
     }
 
-    public void setLiftPosition(liftPosition desiredPos) {
+    public void setLiftPosition(LiftPosition desiredPos) {
         position = desiredPos;
     }
 
     public void output() { //bring lift to correct pos and output balls
         setIntakeState(false);
-        setLiftPosition(liftPosition.HIGH);
+        setLiftPosition(LiftPosition.HIGH);
     }
 }
