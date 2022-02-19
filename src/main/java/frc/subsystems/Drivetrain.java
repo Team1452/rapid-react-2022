@@ -2,6 +2,8 @@ package frc.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.RobotMap;
 
 /**
@@ -57,7 +59,6 @@ public class Drivetrain {
     public void driveRight(double speed) {
         rightDrive.set(speed);
     }
-
     /**
      * Close motor IO when class is no longer needed
      */
