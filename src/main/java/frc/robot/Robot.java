@@ -58,11 +58,11 @@ public class Robot extends TimedRobot {
         m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
         m_chooser.addOption("My Auto", kCustomAuto);
         SmartDashboard.putData("Auto choices", m_chooser);
-        leftControl = new Joystick(0);
+        leftControl = new Joystick(1);
        // rightControl = new Joystick(1);
         //mechanism1 = new Mechanism1(1);
         
-        driverControl1 = new Joystick(1);
+        driverControl1 = new Joystick(0);
         leftDrive = new CANSparkMax(3, MotorType.kBrushless);
         leftDrive.restoreFactoryDefaults();
         leftDrive2 = new CANSparkMax(5, MotorType.kBrushless);
