@@ -59,9 +59,8 @@ public class Climb {
         controller.setRumble(RumbleType.kRightRumble, 0);
     }
 
-    private void extendGondola() {
-
-        gondolaMotor.set(1);
+    private void retractGondola() {
+        gondolaMotor.set(-1);
         final RelativeEncoder encoder = gondolaMotor.getEncoder();
         while (controller.getRightBumper()) {
             try {
@@ -72,10 +71,10 @@ public class Climb {
         }
         gondolaMotor.stopMotor();
     }
-    private void retractGondola() {
-        gondolaMotor.set(1);
+    private void extendGondola() {
         final RelativeEncoder encoder = gondolaMotor.getEncoder();
-        while (controller.getLeftBumper()) {
+        while (controller.getLeftTriggerAxis()>0) {
+            gondolaMotor.set(controller.getRightTriggerAxis());
             try {
                 Thread.sleep(10);
             } catch (Exception err) {
@@ -83,6 +82,31 @@ public class Climb {
             }
         }
         gondolaMotor.stopMotor();
+    }
+    private void retractLift() {
+        motor.set(-1);
+        final RelativeEncoder encoder = motor.getEncoder();
+        while (controller.getRightBumperPressed()) {
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        motor.stopMotor();
+    }
+    private void extendLift() {
+        motor.set(1);
+        final RelativeEncoder encoder = motor.getEncoder();
+        while (controller.getRightTriggerAxis() > 0) {
+            motor.set(controller.getRightTriggerAxis());
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        motor.stopMotor();
     }
 
     /*
