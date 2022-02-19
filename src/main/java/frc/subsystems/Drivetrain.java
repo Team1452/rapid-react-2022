@@ -1,9 +1,12 @@
 package frc.subsystems;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.RobotMap;
 
 /**
@@ -45,6 +48,17 @@ public class Drivetrain {
      */
     public void driveLeft(double speed) {
         leftDrive.set(speed);
+    }
+
+    public List<Double> getPosition() {
+        List<Double> result = new ArrayList<>();
+
+        result.add(leftDrive.getEncoder().getPosition());
+        result.add(leftDrive2.getEncoder().getPosition());
+        result.add(rightDrive.getEncoder().getPosition());
+        result.add(rightDrive2.getEncoder().getPosition());
+
+        return result;
     }
 
     /**

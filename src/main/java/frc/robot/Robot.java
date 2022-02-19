@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
@@ -22,6 +23,9 @@ public class Robot extends TimedRobot {
     private Drivetrain drivetrain;
     private Climb climb;
 
+    private DigitalInput limit;
+    private DigitalInput optical;
+
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
     }
@@ -31,6 +35,9 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         controller = new XboxController(RobotMap.XBOX_CONTROLLER);
         drivetrain = new Drivetrain();
+
+        limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
+        optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
     }
 
     /** Called every PERIODIC_INTERVAL */
@@ -59,6 +66,11 @@ public class Robot extends TimedRobot {
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
+
+        System.out.println(drivetrain.getPosition());
+        System.out.println("Limit switch: " + limit.get());
+        System.out.println("Optical: " + optical.get());
+
     }
 
     @Override
