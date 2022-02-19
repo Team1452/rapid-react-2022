@@ -21,7 +21,6 @@ public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
-
     private XboxController controller;
     private Drivetrain drivetrain;
 
@@ -32,7 +31,7 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+        controller = Controller.getInstance().getController();
         drivetrain = Drivetrain.getInstance();
     }
 
