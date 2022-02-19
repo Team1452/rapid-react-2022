@@ -12,12 +12,12 @@ public class RobotMap {
     public static final int INTAKE_MOTOR_INTAKE = 1;
 
     // drive train motors
-    public static final int DRIVETRAIN_MOTOR_BACK_LEFT = 1;
-    public static final int DRIVETRAIN_MOTOR_BACK_RIGHT = 2;     
-    public static final int DRIVETRAIN_MOTOR_FRONT_LEFT = 3;     
-    public static final int DRIVETRAIN_MOTOR_FRONT_RIGHT = 4;     
+    public static final int DRIVETRAIN_MOTOR_BACK_LEFT = 3;
+    public static final int DRIVETRAIN_MOTOR_BACK_RIGHT = 4;     
+    public static final int DRIVETRAIN_MOTOR_FRONT_LEFT = 5;     
+    public static final int DRIVETRAIN_MOTOR_FRONT_RIGHT = 2;     
 
-    public static final int XBOX_CONTROLLER = 1;
+    public static final int XBOX_CONTROLLER = 0;
 
     // climb
     public static final int CLIMB_GONDOLA_MOTOR = 1;

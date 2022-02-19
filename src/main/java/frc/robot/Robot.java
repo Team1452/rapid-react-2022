@@ -1,8 +1,6 @@
 package frc.robot;
 
-import java.lang.Math;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -16,17 +14,14 @@ import edu.wpi.first.wpilibj.XboxController;
  * project.
  */
 public class Robot extends TimedRobot {
-    private static final double PERIODIC_INTERVAL = 0.03;    
-
-    private static final String kDefaultAuto = "Default";
-    private static final String kCustomAuto = "My Auto";
-    private final SendableChooser<String> m_chooser = new SendableChooser<>();
+    // run periodic methods every 30ms
+    private static final double PERIODIC_INTERVAL = 30;
 
     private XboxController controller;
     private Drivetrain drivetrain;
 
     public Robot() {
-        super(PERIODIC_INTERVAL);
+        super(PERIODIC_INTERVAL / 1000);
     }
 
     /** Run when robot is started for initialization */
@@ -62,7 +57,7 @@ public class Robot extends TimedRobot {
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
-   }
+    }
 
     @Override
     public void disabledInit() {
