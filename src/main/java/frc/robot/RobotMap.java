@@ -19,6 +19,10 @@ public class RobotMap {
 
     public static final int XBOX_CONTROLLER = 0;
 
+    // sensors
+    public static final int LIMIT_SWITCH = 0;
+    public static final int OPTICAL_SENSOR = 1;
+
     // climb
     public static final int CLIMB_GONDOLA_MOTOR = 1;
     public static final int CLIMB_MOTOR = 1;     

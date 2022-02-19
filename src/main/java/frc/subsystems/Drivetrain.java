@@ -1,9 +1,12 @@
 package frc.subsystems;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.RobotMap;
 
 /**
@@ -12,46 +15,58 @@ import frc.robot.RobotMap;
  */
 public class Drivetrain {
 
-    private CANSparkMax leftDrive, rightDrive;
+    private CANSparkMax backLeftDrive, backRightDrive;
 
     // hold onto auxiliary motors to keep track of opening/closing
-    private CANSparkMax leftDrive2, rightDrive2;
+    private CANSparkMax frontLeftDrive, frontRightDrive;
 
     /**
      * Initialize motors
      */
     public Drivetrain() {
-        leftDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_LEFT, MotorType.kBrushless);
-        rightDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_RIGHT, MotorType.kBrushless);
+        backLeftDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_LEFT, MotorType.kBrushless);
+        backRightDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_RIGHT, MotorType.kBrushless);
         
         // fetch 
-        leftDrive2 = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_FRONT_LEFT, MotorType.kBrushless);
-        rightDrive2 = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_FRONT_RIGHT, MotorType.kBrushless);
+        frontLeftDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_FRONT_LEFT, MotorType.kBrushless);
+        frontRightDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_FRONT_RIGHT, MotorType.kBrushless);
 
-        leftDrive.restoreFactoryDefaults();
-        leftDrive2.restoreFactoryDefaults();
-        rightDrive.restoreFactoryDefaults();
-        rightDrive2.restoreFactoryDefaults();
+        backLeftDrive.restoreFactoryDefaults();
+        backRightDrive.restoreFactoryDefaults();
 
-        leftDrive2.follow(leftDrive);
-        rightDrive2.follow(rightDrive);
+        frontRightDrive.restoreFactoryDefaults();
+        frontLeftDrive.restoreFactoryDefaults();
 
-        leftDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        rightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        frontLeftDrive.follow(backLeftDrive);
+        frontRightDrive.follow(backRightDrive);
+
+        backLeftDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        backRightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
     }
 
     /**
      * Set speed of left drive
      */
     public void driveLeft(double speed) {
-        leftDrive.set(speed);
+        backLeftDrive.set(speed);
     }
 
     /**
      * Set speed of right drive
     */
     public void driveRight(double speed) {
-        rightDrive.set(speed);
+        backRightDrive.set(speed);
+    }
+ 
+    public List<Double> getPosition() {
+        List<Double> result = new ArrayList<>();
+
+        result.add(backLeftDrive.getEncoder().getPosition());
+        result.add(backRightDrive.getEncoder().getPosition());
+        result.add(frontRightDrive.getEncoder().getPosition());
+        result.add(frontLeftDrive.getEncoder().getPosition());
+
+        return result;
     }
 
     /**
@@ -68,9 +83,9 @@ public class Drivetrain {
      * Close motor IO when class is no longer needed
      */
     public void close() {
-        rightDrive.close();
-        leftDrive.close();
-        rightDrive2.close();
-        leftDrive2.close();
+        backRightDrive.close();
+        backLeftDrive.close();
+        frontRightDrive.close();
+        frontLeftDrive.close();
     }
 }
