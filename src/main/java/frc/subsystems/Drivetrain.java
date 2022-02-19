@@ -5,9 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.RobotMap;
+import frc.utils.SleepUtil;
 
 /**
  * Singleton wrapper class for motor/serial logic for the physical drivetrain
@@ -19,6 +22,16 @@ public class Drivetrain {
 
     // hold onto auxiliary motors to keep track of opening/closing
     private CANSparkMax frontLeftDrive, frontRightDrive;
+
+    private static double WHEEL_CIRCUM = 5; // diameter of each main/drive wheels in inches
+    private static double TURN_DIAMETER = 12.5; // diameter of inscribed circle in inches
+    private static double GEAR_RATIO = 60 / 1; // gear ratio
+
+    private static double kP = 0.1;
+    private static double kI = 0.1;
+    private static double kD = 0.1;
+
+    private PIDController backLeftPID;
 
     /**
      * Initialize motors
@@ -42,6 +55,9 @@ public class Drivetrain {
 
         backLeftDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
         backRightDrive.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+        backLeftPID = new PIDController(kP, kI, kD);
+        backLeftPID.setTolerance(5, 10);
     }
 
     /**
@@ -79,9 +95,48 @@ public class Drivetrain {
         driveRight(-speed + turn);
     }
 
-    public void rotate(double speed) {
-        driveLeft(speed);
-        driveRight(-speed);
+    public void drive(double inches) {
+        double setpoint = inches / (WHEEL_CIRCUM * GEAR_RATIO);
+
+        RelativeEncoder encoder = backLeftDrive.getEncoder();
+        encoder.setPosition(0);
+
+        double rate;
+        while (backLeftPID.atSetpoint()) {
+            rate = backLeftPID.calculate(encoder.getPosition(), setpoint);
+
+            driveLeft(rate);
+            driveRight(rate);
+        }
+
+        stop();
+    }
+
+    public void rotate(double radians) {
+        /* 
+            Calculate target encoder position
+            by getting the arc length of the 
+            sector of the enscribed circle of the drivetrain
+        */
+        double setpoint = radians * TURN_DIAMETER / (WHEEL_CIRCUM * GEAR_RATIO);
+
+        RelativeEncoder encoder = backLeftDrive.getEncoder();
+        encoder.setPosition(0);
+
+        // rotate to target position using PID
+        // TODO: figure out if motor can be controlled via encoder position/via ControlType.kPosition
+        double rate;
+
+        while (!backLeftPID.atSetpoint()) {
+            rate = backLeftPID.calculate(encoder.getPosition(), setpoint);
+
+            driveLeft(rate);
+            driveRight(-rate);
+
+            SleepUtil.sleep(10);
+        }
+
+        stop();
     }
 
     public void stop() {
@@ -97,5 +152,6 @@ public class Drivetrain {
         backLeftDrive.close();
         frontRightDrive.close();
         frontLeftDrive.close();
+        backLeftPID.close();
     }
 }
