@@ -9,7 +9,7 @@ import frc.robot.RobotMap;
 public class Intake {
     // motors
     private final CANSparkMax lift, intake;
-    private int intakeMode = 1; // either -1 or 1 
+    private IntakeMode intakeMode = IntakeMode.INWARD; // either -1 or 1 
     // intake state
     private LiftPosition position;
     private boolean isOn = false;
@@ -23,7 +23,27 @@ public class Intake {
         lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushless);
         intake = new CANSparkMax(RobotMap.INTAKE_MOTOR_INTAKE, MotorType.kBrushless);
     }
+
     public void spin(){
+        if(intakeMode == intakeMode.INWARD){
+        while (controller.getLeftTriggerAxis()>0) {
+            intake.set(controller.getLeftTriggerAxis());
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        }else if(intakeMode == intakeMode.OUTWARD){
+        while (controller.getLeftTriggerAxis()>0) {
+            intake.set(-controller.getLeftTriggerAxis());
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        }
         while (controller.getLeftTriggerAxis()>0) {
             intake.set(controller.getLeftTriggerAxis());
             try {
@@ -34,11 +54,15 @@ public class Intake {
         }
         intake.stopMotor();
     }
+    /**
+     * Intake uses a toggle system, spin will turn it 
+     * 
+     */
     public void toggleIntakeDirection(){
-        if(intakeMode == 1){
-            intakeMode = 0;
-        }else if(intakeMode == 0){
-            intakeMode = 1;
+        if(intakeMode == intakeMode.INWARD){
+            intakeMode = intakeMode.OUTWARD;
+        }else if(intakeMode == intakeMode.OUTWARD){
+            intakeMode = intakeMode.INWARD;
         }
     }
     public int getIntakeDirection(){
