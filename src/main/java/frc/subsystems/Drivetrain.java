@@ -59,6 +59,17 @@ public class Drivetrain {
     public void driveRight(double speed) {
         rightDrive.set(speed);
     }
+
+    /**
+     * Drive arbitrary speed and turn
+     * @param speed
+     * @param turn
+     */
+    public void drive(double speed, double turn) {
+        driveLeft(speed + turn);
+        driveRight(speed - turn);
+    }
+
     /**
      * Close motor IO when class is no longer needed
      */
