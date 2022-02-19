@@ -6,6 +6,9 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.robot.Controller;
 import frc.robot.RobotMap;
 
 public class Climb {
@@ -13,7 +16,7 @@ public class Climb {
     private final DigitalInput limitLeft;
     private final DigitalInput limitRight;
     private final DigitalInput limitCalibrate;
-
+    private XboxController controller = Controller.getInstance().getController();
     // motors
     private final CANSparkMax gondolaMotor;
     private final CANSparkMax motor;
@@ -34,7 +37,7 @@ public class Climb {
     }
 
     private void calibrateGondola() {
-        gondolaMotor.set(-0.5);
+        gondolaMotor.set(-0.25);
 
         while (!limitCalibrate.get()) {
             try {
@@ -43,30 +46,67 @@ public class Climb {
                 err.printStackTrace();
             }
         }
+        gondolaMotor.stopMotor();
+        gondolaMotor.getEncoder().setPosition(0);
+        controller.setRumble(RumbleType.kLeftRumble, 0.5);
+        controller.setRumble(RumbleType.kRightRumble, 0.5);
+            try {
+                Thread.sleep(300);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        controller.setRumble(RumbleType.kLeftRumble, 0);
+        controller.setRumble(RumbleType.kRightRumble, 0);
     }
 
-    private void extendGondola() {
-        gondolaMotor.set(1);
-
+    private void retractGondola() {
+        gondolaMotor.set(-1);
         final RelativeEncoder encoder = gondolaMotor.getEncoder();
-        final SparkMaxPIDController pid = gondolaMotor.getPIDController();
-
-        double initial = encoder.getPosition(),
-                target = 1000, // magic number for revolutions to full extension
-                position,
-                proportional;
-
-        while (!limitLeft.get() && !limitRight.get()) {
-            // encoder.setP(RobotMap.GONDOLA_PID_SETTINGS);
-
-            // gondolaMotor.set(proportional);
-
+        while (controller.getRightBumper()) {
             try {
                 Thread.sleep(10);
             } catch (Exception err) {
                 err.printStackTrace();
             }
         }
+        gondolaMotor.stopMotor();
+    }
+    private void extendGondola() {
+        final RelativeEncoder encoder = gondolaMotor.getEncoder();
+        while (controller.getLeftTriggerAxis()>0) {
+            gondolaMotor.set(controller.getRightTriggerAxis());
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        gondolaMotor.stopMotor();
+    }
+    private void retractLift() {
+        motor.set(-1);
+        final RelativeEncoder encoder = motor.getEncoder();
+        while (controller.getRightBumperPressed()) {
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        motor.stopMotor();
+    }
+    private void extendLift() {
+        motor.set(1);
+        final RelativeEncoder encoder = motor.getEncoder();
+        while (controller.getRightTriggerAxis() > 0) {
+            motor.set(controller.getRightTriggerAxis());
+            try {
+                Thread.sleep(10);
+            } catch (Exception err) {
+                err.printStackTrace();
+            }
+        }
+        motor.stopMotor();
     }
 
     /*

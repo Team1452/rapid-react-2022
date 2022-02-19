@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+        controller = Controller.getInstance().getController();
         drivetrain = Drivetrain.getInstance();
     }
 
