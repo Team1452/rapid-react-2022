@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
+import frc.subsystems.Intake;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -22,6 +23,7 @@ public class Robot extends TimedRobot {
     private XboxController controller;
     private Drivetrain drivetrain;
     private Climb climb;
+    private Intake intake;
 
     private DigitalInput limit;
     private DigitalInput optical;
@@ -35,6 +37,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         controller = new XboxController(RobotMap.XBOX_CONTROLLER);
         drivetrain = new Drivetrain();
+        intake = new Intake();
 
         limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
         optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
@@ -62,15 +65,19 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
+        // update drivetrain
         double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
 
+        // read motors
         System.out.println(drivetrain.getPosition());
         System.out.println("Limit switch: " + limit.get());
         System.out.println("Optical: " + optical.get());
 
+        // update intake
+        intake.update(controller);
     }
 
     @Override

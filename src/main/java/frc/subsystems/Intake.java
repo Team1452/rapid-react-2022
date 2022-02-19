@@ -3,86 +3,66 @@ package frc.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Controller;
+
 import frc.robot.RobotMap;
+
 public class Intake {
     // motors
     private final CANSparkMax lift, intake;
-    private IntakeMode intakeMode = IntakeMode.INWARD; // either -1 or 1 
+    private IntakeMode intakeMode = IntakeMode.INWARD;
+
     // intake state
     private LiftPosition position;
-    private boolean isOn = false;
-    private XboxController controller = Controller.getInstance().getController();
-    // singleton instance
-    private static final Intake instance = new Intake();
+    private boolean active = false;
 
-    public Intake getInstance() { return instance; }
-
-    private Intake() {
+    public Intake() {
         lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushless);
         intake = new CANSparkMax(RobotMap.INTAKE_MOTOR_INTAKE, MotorType.kBrushless);
     }
 
-    public void spin(){
-        if(intakeMode == intakeMode.INWARD){
-        while (controller.getLeftTriggerAxis()>0) {
-            intake.set(controller.getLeftTriggerAxis());
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
-        }
-        }else if(intakeMode == intakeMode.OUTWARD){
-        while (controller.getLeftTriggerAxis()>0) {
-            intake.set(-controller.getLeftTriggerAxis());
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
-        }
-        }
-        while (controller.getLeftTriggerAxis()>0) {
-            intake.set(controller.getLeftTriggerAxis());
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
-        }
-        intake.stopMotor();
-    }
     /**
-     * Intake uses a toggle system, spin will turn it 
-     * 
+     * Sync motors with interal Intake state
+     * to be called in periodic methods by Robot
      */
-    public void toggleIntakeDirection(){
-        if(intakeMode == intakeMode.INWARD){
-            intakeMode = intakeMode.OUTWARD;
-        }else if(intakeMode == intakeMode.OUTWARD){
-            intakeMode = intakeMode.INWARD;
+    public void update(XboxController controller) {
+        // update mode
+        if (controller.getLeftBumper())
+            toggleDirection();
+
+        // update intake motor
+        double speed;
+        
+        switch (intakeMode) {
+            case INWARD:
+                speed = controller.getLeftTriggerAxis();
+                break; 
+            case OUTWARD: 
+                speed = -controller.getLeftTriggerAxis();
+                break;
+            default:
+                System.err.println("Unhandled IntakeMode in Intake: " + intakeMode);
+                return;
         }
-    }
-    public int getIntakeDirection(){
-        return intakeMode;
-    }
-    public void setIntakeState(boolean on) { //set Intake to state x
-        isOn = on;
-        intake.set(isOn ? 1 : 0);
+        
+        intake.set(active ? speed : 0);
     }
 
-    public boolean isOn() {
-        return isOn;
+    /**
+     * Toggle direction from inward/outward
+     */
+    private void toggleDirection(){
+        intakeMode = intakeMode == IntakeMode.INWARD 
+            ? IntakeMode.OUTWARD 
+            : IntakeMode.INWARD;
     }
 
-    public void setLiftPosition(LiftPosition desiredPos) {
-        position = desiredPos;
-    }
-
-    public void output() { //bring lift to correct pos and output balls
-        setIntakeState(false);
-        setLiftPosition(LiftPosition.HIGH);
-    }
+    /**
+     * Getters/setters
+     */
+    public IntakeMode getMode() { return intakeMode; }
+    public void setMode(IntakeMode mode) { intakeMode = mode; }
+    public void setActive(boolean active) { this.active = active; }
+    public void setPosition(LiftPosition pos) { position = pos; }
 }
