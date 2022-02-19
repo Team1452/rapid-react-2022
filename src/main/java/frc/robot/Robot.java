@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -19,6 +20,7 @@ public class Robot extends TimedRobot {
 
     private XboxController controller;
     private Drivetrain drivetrain;
+    private Climb climb;
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -27,8 +29,8 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        controller = Controller.getInstance().getController();
-        drivetrain = Drivetrain.getInstance();
+        controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+        drivetrain = new Drivetrain();
     }
 
     /** Called every PERIODIC_INTERVAL */
@@ -69,6 +71,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        // CLIMB
+        climb = new Climb(controller);
     }
 
     @Override
