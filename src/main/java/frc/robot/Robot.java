@@ -61,9 +61,8 @@ public class Robot extends TimedRobot {
         double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
-        drivetrain.driveLeft(speed + turn);
-        drivetrain.driveRight(turn - speed);
-    }
+        drivetrain.drive(speed, turn);
+   }
 
     @Override
     public void disabledInit() {

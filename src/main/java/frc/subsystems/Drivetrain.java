@@ -59,6 +59,17 @@ public class Drivetrain {
     public void driveRight(double speed) {
         rightDrive.set(speed);
     }
+
+    /**
+     * Move robot at arbitrary speed and turn
+     * @param speed rate at which the robot will accelerate
+     * @param turn rate at which the robot should turn (left/right differential)
+     */
+    public void drive(double speed, double turn) {
+        driveLeft(speed + turn);
+        driveRight(speed - turn);
+    }
+
     /**
      * Close motor IO when class is no longer needed
      */
