@@ -61,19 +61,13 @@ public class Drivetrain {
     }
 
     /**
-<<<<<<< HEAD
      * Move robot at arbitrary speed and turn
      * @param speed rate at which the robot will accelerate
      * @param turn rate at which the robot should turn (left/right differential)
-=======
-     * Drive arbitrary speed and turn
-     * @param speed
-     * @param turn
->>>>>>> b3fd6f2659473f107b70f2a99535c57b1bf845cd
      */
     public void drive(double speed, double turn) {
         driveLeft(speed + turn);
-        driveRight(speed - turn);
+        driveRight(-speed + turn);
     }
 
     /**

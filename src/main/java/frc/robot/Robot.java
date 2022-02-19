@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
+        double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
