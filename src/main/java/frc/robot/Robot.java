@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.Intake;
+import frc.utils.SleepUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -48,13 +49,36 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
     }
 
+    private void waitForAButton() {
+        while (!controller.getAButtonPressed())
+            SleepUtil.sleep(10);
+    }
+
+    /**
+     * When autonomous starts, iterate through autonomous
+     * routine until done
+     */
     @Override
     public void autonomousInit() {
+        Auton.stageOne();
+
+        waitForAButton();
+
+        Auton.stageTwo(drivetrain);
+
+        waitForAButton();
+
+        Auton.stageThree(intake);
+
+        waitForAButton();
+
+        Auton.stageFour(drivetrain);
     }
 
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
+        
     }
 
     /** This function is called once when teleop is enabled. */
@@ -65,12 +89,8 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-<<<<<<< HEAD
-        double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
-=======
         // update drivetrain
         double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
->>>>>>> e0b5c610d9f63b9d1b933b672523ee26e2605125
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
@@ -81,7 +101,7 @@ public class Robot extends TimedRobot {
         System.out.println("Optical: " + optical.get());
 
         // update intake
-        intake.update(controller);
+        intake.set(controller.getLeftTriggerAxis());
     }
 
     @Override
@@ -94,8 +114,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        // CLIMB
-        climb = new Climb(controller);
+        // CLIMB (CONNNOR?!?!?!?!?!?!?!)
+        climb = new Climb();
     }
 
     @Override

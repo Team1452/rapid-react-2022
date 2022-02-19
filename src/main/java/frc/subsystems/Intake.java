@@ -15,7 +15,6 @@ public class Intake {
 
     // intake state
     private LiftPosition position;
-    private boolean active = false;
 
     public Intake() {
         lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushless);
@@ -26,33 +25,30 @@ public class Intake {
      * Sync motors with interal Intake state
      * to be called in periodic methods by Robot
      */
-    public void update(XboxController controller) {
-        // update mode
-        if (controller.getLeftBumper())
-            toggleDirection();
-
-        // update intake motor
-        double speed;
-        
+    public void set(double speed) {
+        // handle intake mode
         switch (intakeMode) {
             case INWARD:
-                speed = controller.getLeftTriggerAxis();
+                speed = -speed;
                 break; 
             case OUTWARD: 
-                speed = -controller.getLeftTriggerAxis();
                 break;
             default:
                 System.err.println("Unhandled IntakeMode in Intake: " + intakeMode);
                 return;
         }
         
-        intake.set(active ? speed : 0);
+        intake.set(speed);
+    }
+
+    public void stop() {
+        intake.set(0);
     }
 
     /**
      * Toggle direction from inward/outward
      */
-    private void toggleDirection(){
+    public void toggleDirection(){
         intakeMode = intakeMode == IntakeMode.INWARD 
             ? IntakeMode.OUTWARD 
             : IntakeMode.INWARD;
@@ -63,6 +59,5 @@ public class Intake {
      */
     public IntakeMode getMode() { return intakeMode; }
     public void setMode(IntakeMode mode) { intakeMode = mode; }
-    public void setActive(boolean active) { this.active = active; }
     public void setPosition(LiftPosition pos) { position = pos; }
 }

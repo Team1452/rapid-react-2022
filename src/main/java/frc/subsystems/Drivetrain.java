@@ -79,6 +79,16 @@ public class Drivetrain {
         driveRight(-speed + turn);
     }
 
+    public void rotate(double speed) {
+        driveLeft(speed);
+        driveRight(-speed);
+    }
+
+    public void stop() {
+        driveLeft(0);
+        driveRight(0);
+    }
+
     /**
      * Close motor IO when class is no longer needed
      */
