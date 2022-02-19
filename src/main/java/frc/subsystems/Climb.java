@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import frc.robot.Controller;
 import frc.robot.RobotMap;
 
 public class Climb {
@@ -15,20 +16,24 @@ public class Climb {
     private final DigitalInput limitLeft;
     private final DigitalInput limitRight;
     private final DigitalInput limitCalibrate;
-    private XboxController controller;
+    private XboxController controller = Controller.getInstance().getController();
     // motors
     private final CANSparkMax gondolaMotor;
     private final CANSparkMax motor;
 
-    public Climb(XboxController controller) {
-        this.controller = controller;
+    private static final Climb instance = new Climb();
 
+    private Climb() {
         limitLeft = new DigitalInput(RobotMap.CLIMB_LIMIT_LEFT);
         limitRight = new DigitalInput(RobotMap.CLIMB_LIMIT_RIGHT);
         limitCalibrate = new DigitalInput(RobotMap.CLIMB_LIMIT_CALIBRATE);
 
         gondolaMotor = new CANSparkMax(RobotMap.CLIMB_GONDOLA_MOTOR, MotorType.kBrushless);
         motor = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
+    }
+
+    public static Climb getInstance() {
+        return instance;
     }
 
     private void calibrateGondola() {

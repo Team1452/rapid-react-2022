@@ -17,10 +17,16 @@ public class Drivetrain {
     // hold onto auxiliary motors to keep track of opening/closing
     private CANSparkMax leftDrive2, rightDrive2;
 
+    private static Drivetrain instance = new Drivetrain(); // eagerly-initialized singleton for use throughout codebase
+
+    public static Drivetrain getInstance() {
+        return instance;
+    }
+
     /**
      * Initialize motors
      */
-    public Drivetrain() {
+    private Drivetrain() {
         leftDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_LEFT, MotorType.kBrushless);
         rightDrive = new CANSparkMax(RobotMap.DRIVETRAIN_MOTOR_BACK_RIGHT, MotorType.kBrushless);
         
