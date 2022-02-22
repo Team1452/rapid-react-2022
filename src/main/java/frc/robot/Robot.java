@@ -29,6 +29,12 @@ public class Robot extends TimedRobot {
     private DigitalInput limit;
     private DigitalInput optical;
 
+    // auton state
+    private Location location;
+    
+    // angle w.r.t positive x-axis in radians
+    private double angle;
+
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
     }
@@ -43,7 +49,6 @@ public class Robot extends TimedRobot {
         limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
         optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
     }
-
     /** Called every PERIODIC_INTERVAL */
     @Override
     public void robotPeriodic() {
@@ -60,19 +65,22 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        Auton.stageOne();
+        // TODO: add in SmartDashboard/UI for selecting starting Tarmac
+        Auton auton = new Auton(Tarmac.LEFT_TOP);
+
+        auton.stageOne();
 
         waitForAButton();
 
-        Auton.stageTwo(drivetrain);
+        auton.stageTwo(drivetrain);
 
         waitForAButton();
 
-        Auton.stageThree(intake);
+        auton.stageThree(intake);
 
         waitForAButton();
 
-        Auton.stageFour(drivetrain);
+        auton.stageFour(drivetrain);
     }
 
     /** This function is called periodically during autonomous. */
