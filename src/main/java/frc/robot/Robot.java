@@ -1,9 +1,11 @@
 package frc.robot;
 
-import java.lang.Math;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
+import frc.subsystems.Intake;
+import frc.utils.SleepUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -16,37 +18,75 @@ import edu.wpi.first.wpilibj.XboxController;
  * project.
  */
 public class Robot extends TimedRobot {
-    private static final double PERIODIC_INTERVAL = 0.03;    
+    // run periodic methods every 30ms
+    private static final double PERIODIC_INTERVAL = 30;
 
-    private static final String kDefaultAuto = "Default";
-    private static final String kCustomAuto = "My Auto";
-    private final SendableChooser<String> m_chooser = new SendableChooser<>();
     private XboxController controller;
     private Drivetrain drivetrain;
+    private Climb climb;
+    private Intake intake;
+
+    // private DigitalInput limit;
+    // private DigitalInput optical;
+
+    // auton state
+    private Location location;
+    
+    // angle w.r.t positive x-axis in radians
+    private double angle;
 
     public Robot() {
-        super(PERIODIC_INTERVAL);
+        super(PERIODIC_INTERVAL / 1000);
     }
 
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        controller = Controller.getInstance().getController();
-        drivetrain = Drivetrain.getInstance();
-    }
+        controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+        drivetrain = new Drivetrain();
+        intake = new Intake();
 
+        // limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
+        // optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
+    }
     /** Called every PERIODIC_INTERVAL */
     @Override
     public void robotPeriodic() {
     }
 
+    private void waitForAButton() {
+        while (!controller.getAButtonPressed())
+            SleepUtil.sleep(10);
+    }
+
+    /**
+     * When autonomous starts, iterate through autonomous
+     * routine until done
+     */
     @Override
     public void autonomousInit() {
+        // TODO: add in SmartDashboard/UI for selecting starting Tarmac
+        Auton auton = new Auton(Tarmac.LEFT_TOP);
+
+        auton.stageOne();
+
+        waitForAButton();
+
+        auton.stageTwo(drivetrain);
+
+        waitForAButton();
+
+        auton.stageThree(intake);
+
+        waitForAButton();
+
+        auton.stageFour(drivetrain);
     }
 
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
+        
     }
 
     /** This function is called once when teleop is enabled. */
@@ -57,10 +97,17 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
+        // update drivetrain
+        double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrain.drive(speed, turn);
+
+        // read motors
+        System.out.println(drivetrain.getPosition());
+
+        // update intake
+        intake.set(controller.getLeftTriggerAxis());
     }
 
     @Override
@@ -73,6 +120,16 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
+        // CLIMB (CONNNOR?!?!?!?!?!?!?!)
+        // climb = new Climb();
+
+        // drivetrain.driveInches(92.0);
+
+        Auton drive = new Auton(new Position(new Location(0, 0), 0));
+
+        drive.navigate(drivetrain, new Location(51, 51));
+
+        // drivetrain.rotate(2.0 * Math.PI);
     }
 
     @Override

@@ -8,81 +8,83 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import frc.robot.Controller;
 import frc.robot.RobotMap;
+import frc.utils.SleepUtil;
 
 public class Climb {
     // limit switches
     private final DigitalInput limitLeft;
     private final DigitalInput limitRight;
     private final DigitalInput limitCalibrate;
-    private XboxController controller = Controller.getInstance().getController();
+
     // motors
-    private final CANSparkMax gondolaMotor;
-    private final CANSparkMax motor;
+    private final CANSparkMax gondola;
+    private final CANSparkMax lift;
 
-    private static final Climb instance = new Climb();
-
-    private Climb() {
+    public Climb() {
         limitLeft = new DigitalInput(RobotMap.CLIMB_LIMIT_LEFT);
         limitRight = new DigitalInput(RobotMap.CLIMB_LIMIT_RIGHT);
         limitCalibrate = new DigitalInput(RobotMap.CLIMB_LIMIT_CALIBRATE);
 
-        gondolaMotor = new CANSparkMax(RobotMap.CLIMB_GONDOLA_MOTOR, MotorType.kBrushless);
-        motor = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
+        gondola = new CANSparkMax(RobotMap.CLIMB_GONDOLA_MOTOR, MotorType.kBrushless);
+        lift = new CANSparkMax(RobotMap.CLIMB_MOTOR, MotorType.kBrushless);
     }
 
-    public static Climb getInstance() {
-        return instance;
-    }
+    private void calibrate(XboxController controller) {
+        gondola.set(-0.25);
 
-    private void calibrateGondola() {
-        gondolaMotor.set(-0.25);
+        while (!limitCalibrate.get())
+            SleepUtil.sleep(10);
 
-        while (!limitCalibrate.get()) {
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
-        }
-        gondolaMotor.stopMotor();
-        gondolaMotor.getEncoder().setPosition(0);
+        // stop and floor gondola
+        gondola.stopMotor();
+        gondola.getEncoder().setPosition(0);
+
         controller.setRumble(RumbleType.kLeftRumble, 0.5);
         controller.setRumble(RumbleType.kRightRumble, 0.5);
-            try {
-                Thread.sleep(300);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
+
+        SleepUtil.sleep(300);
+
         controller.setRumble(RumbleType.kLeftRumble, 0);
         controller.setRumble(RumbleType.kRightRumble, 0);
     }
 
-    private void extendGondola() {
+    private void retractGondola(XboxController controller) {
+        gondola.set(-1);
 
-        gondolaMotor.set(1);
-        final RelativeEncoder encoder = gondolaMotor.getEncoder();
-        while (controller.getRightBumper()) {
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
-        }
-        gondolaMotor.stopMotor();
+        while (controller.getRightBumper()) 
+            SleepUtil.sleep(10);
+
+        gondola.stopMotor();
     }
-    private void retractGondola() {
-        gondolaMotor.set(1);
-        final RelativeEncoder encoder = gondolaMotor.getEncoder();
-        while (controller.getLeftBumper()) {
-            try {
-                Thread.sleep(10);
-            } catch (Exception err) {
-                err.printStackTrace();
-            }
+
+    private void extendGondola(XboxController controller) {
+        while (controller.getLeftTriggerAxis() > 0) {
+            gondola.set(controller.getRightTriggerAxis());
+            SleepUtil.sleep(10);
         }
-        gondolaMotor.stopMotor();
+
+        gondola.stopMotor();
+    }
+
+    private void retractLift(XboxController controller) {
+        lift.set(-1);
+
+        while (controller.getRightBumperPressed())
+            SleepUtil.sleep(10);
+
+        lift.stopMotor();
+    }
+
+    private void extendLift(XboxController controller) {
+        lift.set(1);
+
+        while (controller.getRightTriggerAxis() > 0) {
+            lift.set(controller.getRightTriggerAxis());
+            SleepUtil.sleep(10);
+        }
+
+        lift.stopMotor();
     }
 
     /*
