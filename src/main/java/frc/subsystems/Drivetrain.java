@@ -108,8 +108,8 @@ public class Drivetrain {
 
         double sign = inches > 0 ? 1 : -1;
 
-        driveLeft(sign * -0.1);
-        driveRight(sign * 0.1);
+        driveLeft(sign * 0.1);
+        driveRight(sign * -0.1);
 
         while (Math.abs(encoder.getPosition()) < setpoint) {
             // System.out.println("Encoder pos: " + encoder.getPosition() + "; setpoint: " + setpoint);
