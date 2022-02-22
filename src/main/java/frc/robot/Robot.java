@@ -44,10 +44,10 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         controller = new XboxController(RobotMap.XBOX_CONTROLLER);
         drivetrain = new Drivetrain();
-        intake = new Intake();
+        // intake = new Intake();
 
-        limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
-        optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
+        // limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
+        // optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
     }
     /** Called every PERIODIC_INTERVAL */
     @Override
