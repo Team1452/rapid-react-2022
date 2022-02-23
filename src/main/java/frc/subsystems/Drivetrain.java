@@ -25,7 +25,7 @@ public class Drivetrain {
     private CANSparkMax frontLeftDrive, frontRightDrive;
 
     private static double WHEEL_CIRCUM = 6.0 * Math.PI; // diameter of each main/drive wheels in inches
-    private static double TURN_DIAMETER = 12.5; // diameter of inscribed circle in inches
+    private static double TURN_DIAMETER = 21.5; // diameter of inscribed circle in inches
     private static double GEAR_RATIO = 1.0 / 10.71; // gear ratio
 
     private static double kP = 0.1;
@@ -98,8 +98,7 @@ public class Drivetrain {
 
     public void driveInches(double inches) {
         // TODO: make more precise (half inch off)
-        double inchesOffset = -2.0;
-        double setpoint = (inches + inchesOffset) / (WHEEL_CIRCUM * GEAR_RATIO);
+        double setpoint = inches / (WHEEL_CIRCUM * GEAR_RATIO);
 
         RelativeEncoder encoder = backLeftDrive.getEncoder();
         encoder.setPosition(0);
@@ -139,7 +138,7 @@ public class Drivetrain {
         RelativeEncoder encoder = backLeftDrive.getEncoder();
         encoder.setPosition(0);
 
-        double sign = radians > 0 ? 1 : -1;        
+        double sign = Math.signum(radians);
 
         driveLeft(sign * 0.2);
         driveRight(sign * 0.2);

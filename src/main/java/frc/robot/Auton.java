@@ -28,20 +28,12 @@ public class Auton {
         double dX = to.getX() - position.getLocation().getX();
         double dY = to.getY() - position.getLocation().getY();
 
-        System.out.println("POS: " + dX + ", " + dY);
-
-        double targetAngle = Math.atan(dY / dX);
+        double targetAngle = Math.atan2(dY, dX);
 
         double dAngle = position.getAngle() - targetAngle;
         double distance = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));
 
-        System.out.println("NAVIGATING from " + position.getLocation().getX() + ", " + position.getLocation().getY() + " to " + to.getX() + ", " + to.getY());
-        System.out.println("dAngle: " + dAngle + "; distance: " + distance + "; targetAngle: " + targetAngle);
-
-        System.out.println("Rotating: " + dAngle + " rad, " + (dAngle / Math.PI * 180) + " deg");
         drivetrain.rotate(dAngle);
-
-        System.out.println("DRIVING:");
         drivetrain.driveInches(distance);
 
         position.setAngle(targetAngle);

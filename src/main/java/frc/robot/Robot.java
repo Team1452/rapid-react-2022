@@ -1,6 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
@@ -21,10 +23,10 @@ public class Robot extends TimedRobot {
     // run periodic methods every 30ms
     private static final double PERIODIC_INTERVAL = 30;
 
-    private XboxController controller;
-    private Drivetrain drivetrain;
+    private final XboxController controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+    private final Drivetrain drivetrain = new Drivetrain();
     private Climb climb;
-    private Intake intake;
+    private final Intake intake = new Intake();
 
     // private DigitalInput limit;
     // private DigitalInput optical;
@@ -42,13 +44,11 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        controller = new XboxController(RobotMap.XBOX_CONTROLLER);
-        drivetrain = new Drivetrain();
-        intake = new Intake();
-
-        // limit = new DigitalInput(RobotMap.LIMIT_SWITCH);
-        // optical = new DigitalInput(RobotMap.OPTICAL_SENSOR); 
+        // start camera stream for Microsoft Lifecam HD-3000
+        UsbCamera camera = CameraServer.startAutomaticCapture();
+        camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
     }
+
     /** Called every PERIODIC_INTERVAL */
     @Override
     public void robotPeriodic() {
