@@ -2,9 +2,9 @@ package frc.robot;
 
 public class RobotMap {
     // intake switches
-    public static final int CLIMB_LIMIT_LEFT = -1;     
-    public static final int CLIMB_LIMIT_RIGHT = -1;
-    public static final int CLIMB_LIMIT_CALIBRATE = -1;
+    public static final int CLIMB_LIMIT_LEFT = 1;     
+    public static final int CLIMB_LIMIT_RIGHT = 1;
+    public static final int CLIMB_LIMIT_CALIBRATE = 1;
 
     // intake motors
     public static final int INTAKE_MOTOR_LIFT = -1;
@@ -23,6 +23,6 @@ public class RobotMap {
     public static final int OPTICAL_SENSOR = 1;
 
     // climb
-    public static final int CLIMB_GONDOLA_MOTOR = -1;
-    public static final int CLIMB_MOTOR = -1;
+    public static final int CLIMB_GONDOLA_MOTOR = 1;
+    public static final int CLIMB_MOTOR = 1;     
 }

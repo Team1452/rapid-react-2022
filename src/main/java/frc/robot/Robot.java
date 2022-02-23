@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
@@ -23,19 +26,10 @@ public class Robot extends TimedRobot {
     // run periodic methods every 30ms
     private static final double PERIODIC_INTERVAL = 30;
 
-    private final XboxController controller = new XboxController(RobotMap.XBOX_CONTROLLER);
-    private final Drivetrain drivetrain = new Drivetrain();
+    private XboxController controller = new XboxController(RobotMap.XBOX_CONTROLLER);
+    private Drivetrain drivetrain = new Drivetrain();
+    private Intake intake = new Intake();
     private Climb climb;
-    private final Intake intake = new Intake();
-
-    // private DigitalInput limit;
-    // private DigitalInput optical;
-
-    // auton state
-    private Location location;
-    
-    // angle w.r.t positive x-axis in radians
-    private double angle;
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -44,7 +38,7 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        // start camera stream for Microsoft Lifecam HD-3000
+        // configure UsbCamera for Shuffleboard
         UsbCamera camera = CameraServer.startAutomaticCapture();
         camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
     }
@@ -101,13 +95,15 @@ public class Robot extends TimedRobot {
         double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
+        System.out.println("TELEOP: speed: " + speed + "; " + turn);
+
         drivetrain.drive(speed, turn);
 
         // read motors
-        System.out.println(drivetrain.getPosition());
+        // System.out.println(drivetrain.getPosition());
 
         // update intake
-        intake.set(controller.getLeftTriggerAxis());
+        // intake.set(controller.getLeftTriggerAxis());
     }
 
     @Override
@@ -118,6 +114,11 @@ public class Robot extends TimedRobot {
     public void disabledPeriodic() {
     }
 
+
+    private double toRadians(double deg) {
+        return deg / 180.0 * Math.PI;
+    }
+
     @Override
     public void testInit() {
         // CLIMB (CONNNOR?!?!?!?!?!?!?!)
@@ -125,11 +126,39 @@ public class Robot extends TimedRobot {
 
         // drivetrain.driveInches(92.0);
 
+        // drivetrain.rotate(-Math.PI / 2.0);
+
         Auton drive = new Auton(new Position(new Location(0, 0), 0));
 
-        drive.navigate(drivetrain, new Location(51, 51));
+        System.out.println("STARTING TEST:");
+        System.out.println("Rotating to 270deg");
+        drive.rotateTo(drivetrain, toRadians(270.0));
 
+        System.out.println("Rotating to 0deg");
+        drive.rotateTo(drivetrain, toRadians(0.0));
+
+        // List<Location> list = new LinkedList<>();
+
+        // list.add(new Location(51, 51));
+        // list.add(new Location(51, 0));
+        // list.add(new Location(0, 0));
+
+
+        // drive.navigate(drivetrain, new Location(51, 51));
+        // drive.navigate(drivetrain, new Location(51, 0));
+        // drive.navigate(drivetrain, new Location(0, 0));
+
+        // System.out.println("ROTATING...");
         // drivetrain.rotate(2.0 * Math.PI);
+
+        // System.out.println("SLEEPING...");
+        // SleepUtil.sleep(1000);
+
+        //System.out.println("DRIVING...");
+        //drivetrain.driveInches(24.0);
+
+        //System.out.println("ROTATING...");
+        //drivetrain.rotate(2.0 * Math.PI);
     }
 
     @Override

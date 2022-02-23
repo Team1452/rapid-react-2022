@@ -96,27 +96,49 @@ public class Drivetrain {
         driveRight(-speed + turn);
     }
 
+
+    private static final double driveKp = 7.0;
+    private static final double driveKi = 0.018;
+    private static final double driveKd = 1.5;
+
     public void driveInches(double inches) {
         // TODO: make more precise (half inch off)
-        double setpoint = inches / (WHEEL_CIRCUM * GEAR_RATIO);
+        double setpoint = Math.abs(inches) / (WHEEL_CIRCUM * GEAR_RATIO);
+
+        System.out.println("STARTING driveInches(" + inches + ")");
 
         RelativeEncoder encoder = backLeftDrive.getEncoder();
-        encoder.setPosition(0);
+        double initial = encoder.getPosition();
 
-        System.out.print("STARTING driveInches()");
+        PIDController pid = new PIDController(driveKp, driveKi, driveKd);
+        pid.setSetpoint(setpoint);
+        pid.setTolerance(0.05);
+
+        System.out.println("Starting pos: " + encoder.getPosition() + "; target: " + setpoint);
 
         double sign = inches > 0 ? 1 : -1;
 
-        driveLeft(sign * 0.1);
-        driveRight(sign * -0.1);
+        while (!pid.atSetpoint()) {
+            double rate = pid.calculate(Math.abs(encoder.getPosition() - initial));
 
-        while (Math.abs(encoder.getPosition()) < setpoint) {
-            // System.out.println("Encoder pos: " + encoder.getPosition() + "; setpoint: " + setpoint);
+            // TODO: normalize PID rate/tweak gains for motors?
+            driveLeft(sign * rate);
+            driveRight(-sign * rate);
+
             SleepUtil.sleep(10);
         }
 
+        pid.close();
+
+        System.out.println("driveInches() has completed: " + encoder.getPosition() + ", " + setpoint);
+
         stop();
     }
+
+
+    private static final double rotateKp = 7.0;
+    private static final double rotateKi = 0.018;
+    private static final double rotateKd = 1.5;
 
     public void rotate(double radians) {
         /* 
@@ -124,31 +146,35 @@ public class Drivetrain {
             by getting the arc length of the 
             sector of the enscribed circle of the drivetrain
         */
-        // double setpoint = radians * TURN_DIAMETER / (WHEEL_CIRCUM * GEAR_RATIO);
-
-        double setpoint = Math.abs(radians) * TURN_DIAMETER / (WHEEL_CIRCUM * GEAR_RATIO);
-
-        System.out.print("Setpoint: ");
-        System.out.print(setpoint);
+        double setpoint = Math.abs(radians) * TURN_DIAMETER / (WHEEL_CIRCUM * GEAR_RATIO * 2.0);
 
         // TODO: Try and get ControlType.kPosition to work (drive rotations instead of velocity)
         // backLeftDrive.getPIDController().setReference(setpoint / 2.0, com.revrobotics.CANSparkMax.ControlType.kPosition);
         // backRightDrive.getPIDController().setReference(setpoint / 2.0, com.revrobotics.CANSparkMax.ControlType.kPosition);
 
         RelativeEncoder encoder = backLeftDrive.getEncoder();
-        encoder.setPosition(0);
+        double initial = encoder.getPosition();
 
-        double sign = Math.signum(radians);
-
-        driveLeft(sign * 0.2);
-        driveRight(sign * 0.2);
+        PIDController pid = new PIDController(rotateKp, rotateKi, rotateKd);
+        pid.setSetpoint(setpoint);
+        pid.setTolerance(0.05);
 
         // TODO: make rotations more precise
-        while (Math.abs(encoder.getPosition()) < setpoint) {
-            System.out.println("Encoder position: " + encoder.getPosition() + "; target: " + setpoint);
+        double sign = Math.signum(radians);
+        while (!pid.atSetpoint()) {
+            SleepUtil.sleep(5);
+            
+            double rate = pid.calculate(Math.abs(initial - encoder.getPosition()));
 
-            SleepUtil.sleep(10);
+            System.out.println(rate);
+
+            // TODO: normalize PID calculate() output for motors/tweak gains?
+
+            driveLeft(sign * -rate);
+            driveRight(sign * -rate);
         }
+
+        pid.close();
 
         stop();
     }
