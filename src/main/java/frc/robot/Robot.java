@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
@@ -86,6 +89,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
+    }
+
+
+    private double toRadians(double deg) {
+        return deg / 180.0 * Math.PI;
     }
 
     @Override
