@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
     /** Run when robot is started for initialization */
     @Override
     public void robotInit() {
-        // start camera stream for Microsoft Lifecam HD-3000
+        // start camera stream for USB camera
         UsbCamera camera = CameraServer.startAutomaticCapture();
         camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
     }
@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     public void autonomousInit() {
         // TODO: get tarmac from Shuffleboard
         auton = new Auton(Tarmac.LEFT_BOTTOM, drivetrainController);
+        auton.start();
     }
 
     /** This function is called periodically during autonomous. */

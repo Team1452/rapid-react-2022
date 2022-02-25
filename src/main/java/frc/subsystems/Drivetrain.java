@@ -8,8 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**
- * Singleton wrapper class for motor/serial logic for the physical drivetrain
- * Business logic is handled elsewhere in frc.robot
+ * Wrapper class for motor/serial logic for the physical drivetrain
  */
 public class Drivetrain {
 

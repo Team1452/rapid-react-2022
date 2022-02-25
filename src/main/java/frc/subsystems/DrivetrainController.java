@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import edu.wpi.first.math.controller.PIDController;
 
+/**
+ * Wrapper class for interfacing with Drivetrain
+ */
 public class DrivetrainController {
     private static double WHEEL_CIRCUM = 6.0 * Math.PI; // diameter of each main/drive wheels in inches
     private static double TURN_DIAMETER = 21.5; // diameter of inscribed circle in inches
@@ -131,8 +134,8 @@ public class DrivetrainController {
     }
 
     /**
-     * Update controller to update state machine and robot actuators.
-     * To be called from a periodic method.
+     * Update controller to update state machine and robot 
+     * actuators from a periodic method
      */
     public void update(double humanInputSpeed, double humanInputTurn) {
         switch (state) {
