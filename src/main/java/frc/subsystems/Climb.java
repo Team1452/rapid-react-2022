@@ -51,10 +51,14 @@ public class Climb {
 
     private void retractGondola(XboxController controller) {
         gondola.set(-1);
-
         while (controller.getRightBumper()) 
             SleepUtil.sleep(10);
 
+        gondola.stopMotor();
+    }
+    private void retractGondola(double speed, int millis) {
+            gondola.set(-speed);
+            SleepUtil.sleep(millis);
         gondola.stopMotor();
     }
 
@@ -66,14 +70,23 @@ public class Climb {
 
         gondola.stopMotor();
     }
+    private void extendGondola(double speed, int millis) {
+            gondola.set(speed);
+            SleepUtil.sleep(millis);
+        gondola.stopMotor();
+    }
 
     private void retractLift(XboxController controller) {
         lift.set(-1);
-
         while (controller.getRightBumperPressed())
             SleepUtil.sleep(10);
 
         lift.stopMotor();
+    }
+    private void retractLift(double speed, int millis) {
+            gondola.set(-speed);
+            SleepUtil.sleep(millis);
+        gondola.stopMotor();
     }
 
     private void extendLift(XboxController controller) {
@@ -86,7 +99,16 @@ public class Climb {
 
         lift.stopMotor();
     }
-
+    private void extendLift(double speed, int millis) {
+            gondola.set(speed);
+            SleepUtil.sleep(millis);
+        gondola.stopMotor();
+    }
+    
+    private void grabBar(XboxController controller){
+        
+        
+    }
     /*
      * extend and push down
      * extend gondola until lim switch
