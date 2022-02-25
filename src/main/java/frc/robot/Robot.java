@@ -4,10 +4,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
+import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
-import frc.utils.SleepUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
 /**
@@ -25,17 +24,9 @@ public class Robot extends TimedRobot {
 
     private final XboxController controller = new XboxController(RobotMap.XBOX_CONTROLLER);
     private final Drivetrain drivetrain = new Drivetrain();
-    private Climb climb;
+    private final DrivetrainController drivetrainController = new DrivetrainController(drivetrain);
     private final Intake intake = new Intake();
-
-    // private DigitalInput limit;
-    // private DigitalInput optical;
-
-    // auton state
-    private Location location;
-    
-    // angle w.r.t positive x-axis in radians
-    private double angle;
+    private Auton auton;
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -54,39 +45,20 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
     }
 
-    private void waitForAButton() {
-        while (!controller.getAButtonPressed())
-            SleepUtil.sleep(10);
-    }
-
     /**
      * When autonomous starts, iterate through autonomous
      * routine until done
      */
     @Override
     public void autonomousInit() {
-        // TODO: add in SmartDashboard/UI for selecting starting Tarmac
-        Auton auton = new Auton(Tarmac.LEFT_TOP);
-
-        auton.stageOne();
-
-        waitForAButton();
-
-        auton.stageTwo(drivetrain);
-
-        waitForAButton();
-
-        auton.stageThree(intake);
-
-        waitForAButton();
-
-        auton.stageFour(drivetrain);
+        // TODO: get tarmac from Shuffleboard
+        auton = new Auton(Tarmac.LEFT_BOTTOM, drivetrainController);
     }
 
     /** This function is called periodically during autonomous. */
     @Override
     public void autonomousPeriodic() {
-        
+        auton.update(controller.getAButtonPressed());
     }
 
     /** This function is called once when teleop is enabled. */
@@ -101,10 +73,7 @@ public class Robot extends TimedRobot {
         double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
-        drivetrain.drive(speed, turn);
-
-        // read motors
-        System.out.println(drivetrain.getPosition());
+        drivetrainController.update(speed, turn);
 
         // update intake
         intake.set(controller.getLeftTriggerAxis());
@@ -120,16 +89,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        // CLIMB (CONNNOR?!?!?!?!?!?!?!)
-        // climb = new Climb();
-
-        // drivetrain.driveInches(92.0);
-
-        Auton drive = new Auton(new Position(new Location(0, 0), 0));
-
-        drive.navigate(drivetrain, new Location(51, 51));
-
-        // drivetrain.rotate(2.0 * Math.PI);
     }
 
     @Override
