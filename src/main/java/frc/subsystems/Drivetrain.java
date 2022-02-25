@@ -5,7 +5,6 @@ import frc.robot.RobotMap;
 import java.util.Optional;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 /**

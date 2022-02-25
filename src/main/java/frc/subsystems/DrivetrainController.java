@@ -142,7 +142,10 @@ public class DrivetrainController {
 
                 PIDController pid = currentPid.get();
 
-                double targetSetpoint = ((Distance)setpoint.get()).getSetpoint();
+                double targetSetpoint;
+                if (state == State.DRIVING_DISTANCE) targetSetpoint = ((Distance)setpoint.get()).getSetpoint();
+                else if (state == State.ROTATING_ANGLE) targetSetpoint = ((Angle)setpoint.get()).getSetpoint();
+                else throw new IllegalStateException("Unmatched state when setting targetSetpoint");
 
                 if (pid.atSetpoint()) {
                     state = State.TELEOP;
