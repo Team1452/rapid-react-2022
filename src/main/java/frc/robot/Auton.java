@@ -19,7 +19,6 @@ public class Auton {
     }
 
     private Stage stage = Stage.ONE;
-    private boolean doneWithStage = false;
 
     private enum MotionType {
         ROTATION,
@@ -93,25 +92,32 @@ public class Auton {
     }
 
     public void update(boolean userReady) {
-        if (controller.available() && !motions.isEmpty()) {
-            Motion motion = motions.remove();
+        // if drivetrain is available and finished with current
+        // motion, make next motion
+        if (controller.available()) {
+            if (!motions.isEmpty()) {
+                Motion motion = motions.remove();
 
-            switch (motion.getType()) {
-                case ROTATION:
-                    controller.rotateRadians(motion.getAmount());                
-                    break;
-                case DRIVE:
-                    controller.driveInches(motion.getAmount());
-                case LIFT_AND_SHOOT:
-                case CONSUME_BALL:
-                    // TODO
-            }
-        } else if (controller.available() && doneWithStage && userReady) {
-            switch (stage) {
-                case ONE: stageTwo(); break;
-                case TWO: stageThree(); break;
-                case THREE: stageFour(); break;
-                case FOUR: /* DONE! */ break;
+                switch (motion.getType()) {
+                    case ROTATION:
+                        controller.rotateRadians(motion.getAmount());
+                        break;
+                    case DRIVE:
+                        controller.driveInches(motion.getAmount());
+                        break;
+                    case LIFT_AND_SHOOT:
+                    case CONSUME_BALL:
+                        // TODO
+                }
+            } else if (userReady) {
+                // or if no motions are left and user is ready to move to
+                // next stage, do so
+                switch (stage) {
+                    case ONE: stage = Stage.TWO; stageTwo(); break;
+                    case TWO: stage = Stage.THREE; stageThree(); break;
+                    case THREE: stage = Stage.FOUR; stageFour(); break;
+                    case FOUR: /* DONE! */ break;
+                }
             }
         }
 
@@ -135,20 +141,16 @@ public class Auton {
     /**
      * Stage 1: Shoot pre-loaded ball
      */
-    public void stageOne() {
+    private void stageOne() {
         // TODO: Shoot pre-loaded ball into low goal
         System.out.println("Starting stage one...");
-
         motions.add(new Motion(0, MotionType.LIFT_AND_SHOOT));
     }
 
     /**
      * Stage 2: Drive to nearest ball
      */
-    public void stageTwo() {
-        stage = Stage.TWO;
-        doneWithStage = false;
-
+    private void stageTwo() {
         System.out.println("Starting stage two...");
         navigate(sequence.get().getBall());
     }
@@ -156,22 +158,15 @@ public class Auton {
     /**
      * Stage 3: Intake reached ball
      */
-    public void stageThree() {
-        stage = Stage.THREE;
-        doneWithStage = false;
-
+    private void stageThree() {
         System.out.print("Starting stage three...");
-
         motions.add(new Motion(0, MotionType.CONSUME_BALL));
     }
 
     /**
      * Stage 4: Drive to terminal
      */
-    public void stageFour() {
-        stage = Stage.FOUR;
-        doneWithStage = false;
-
+    private void stageFour() {
         System.out.print("Starting stage four...");
         navigate(sequence.get().getTerminal());
     }
