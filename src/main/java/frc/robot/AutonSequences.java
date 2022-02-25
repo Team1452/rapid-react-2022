@@ -14,12 +14,20 @@ public class AutonSequences {
     }
 
     static {
+        final Location leftTerminal = new Location(34.967, 47.803);        
+        final Location leftTopBall = new Location(209.497, 242.643);
+        final Location leftBottomBall = new Location(198, 74);
+
+        final Location rightTerminal = new Location(34.967, 47.803);        
+        final Location rightTopBall = new Location(209.497, 242.643);
+        final Location rightBottomBall = new Location(452.959, 79.499);
+
         sequences.put(
             Tarmac.LEFT_BOTTOM, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  leftBottomBall,
+                /* terminal */  leftTerminal
             )
         );
 
@@ -27,8 +35,8 @@ public class AutonSequences {
             Tarmac.LEFT_MIDDLE, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  leftTopBall,
+                /* terminal */  leftTerminal
             )
         );
 
@@ -36,8 +44,8 @@ public class AutonSequences {
             Tarmac.LEFT_TOP, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  leftTopBall,
+                /* terminal */  leftTerminal
             )
         );
 
@@ -45,8 +53,8 @@ public class AutonSequences {
             Tarmac.RIGHT_BOTTOM, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  rightBottomBall,
+                /* terminal */  rightTerminal
             )
         );
 
@@ -54,8 +62,8 @@ public class AutonSequences {
             Tarmac.RIGHT_MIDDLE, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  rightTopBall,
+                /* terminal */  rightTerminal
             )
         );
 
@@ -63,8 +71,8 @@ public class AutonSequences {
             Tarmac.RIGHT_TOP, 
             new AutonSequence(
                 /* start    */  new Position(new Location(0, 0), 0),
-                /* ball     */  new Location(0, 0),
-                /* terminal */  new Location(0, 0)
+                /* ball     */  rightTopBall,
+                /* terminal */  rightTerminal
             )
         );
     }
