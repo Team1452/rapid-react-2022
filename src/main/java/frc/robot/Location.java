@@ -8,7 +8,7 @@ package frc.robot;
  * Also stores angle relative to positive-x axis from 0 to 2pi (radians)
  */
 public class Location {
-    private double x, y;
+    private final double x, y;
 
     public Location(double x, double y) {
         this.x = x;

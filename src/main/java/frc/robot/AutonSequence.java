@@ -5,10 +5,10 @@ package frc.robot;
  * go in Conner's (tentative?) auton routine
  */
 public class AutonSequence {
-    private Position start;
+    private final Position start;
 
-    private Location ball;
-    private Location terminal;
+    private final Location ball;
+    private final Location terminal;
 
     public AutonSequence(Position start, Location ball, Location terminal) {
         this.ball = ball;
