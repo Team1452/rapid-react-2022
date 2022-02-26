@@ -7,6 +7,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.auton.Auton;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
