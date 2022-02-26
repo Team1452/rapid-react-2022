@@ -10,11 +10,15 @@ import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auton.Auton;
 import frc.robot.auton.AutonSequence;
+import frc.robot.auton.AutonSequences;
 import frc.robot.auton.Motion;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -45,6 +49,13 @@ public class Robot extends TimedRobot {
         // start camera stream for USB camera
         UsbCamera camera = CameraServer.startAutomaticCapture();
         camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
+        // Add commands to the autonomous command chooser
+        SendableChooser<Tarmac> autonomousChooser = new SendableChooser<>();
+        autonomousChooser.setDefaultOption("Simple Auto", Tarmac.RIGHT_BOTTOM);
+        autonomousChooser.addOption("Complex Auto", Tarmac.LEFT_BOTTOM);
+        SmartDashboard.putData(autonomousChooser);
+        Field2d autoFieldBack = new Field2d();
+        SmartDashboard.putData(autoFieldBack);
     }
 
     /** Called every PERIODIC_INTERVAL */

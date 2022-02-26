@@ -23,6 +23,93 @@ public class AutonSequences {
 
     static {
         sequences.put(
+            Tarmac.LEFT_BOTTOM,
+            new AutonSequence(
+                // starting x, y, degrees
+                20.5, 20.6, Math.toRadians(38.5),
+
+                // motions
+                new Motion.SetIntake(true),
+                new Motion.MoveTo(new Location(198, 74)),
+                new Motion.MoveTo(new Location(324, 150)),
+                new Motion.LiftAndShoot()
+            )
+        );
+        sequences.put(
+            Tarmac.LEFT_BOTTOM,
+            new AutonSequence(
+                // starting x, y, degrees
+                20.5, 20.6, Math.toRadians(38.5),
+
+                // motions
+                new Motion.SetIntake(true),
+                new Motion.MoveTo(new Location(198, 74)),
+                new Motion.MoveTo(new Location(324, 150)),
+                new Motion.LiftAndShoot()
+            )
+        );
+
+        sequences.put(
+            Tarmac.LEFT_BOTTOM, 
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            )
+        );
+        sequences.put(
+            Tarmac.LEFT_BOTTOM, 
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            )
+        );
+        sequences.put(
+            Tarmac.LEFT_BOTTOM, 
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            )
+        );
+        sequences.put(
+            Tarmac.LEFT_BOTTOM, 
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            )
+        );
+        sequences.put(
+            Tarmac.LEFT_BOTTOM, 
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            )
+        );
+        sequences.put(
             Tarmac.LEFT_BOTTOM, 
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),

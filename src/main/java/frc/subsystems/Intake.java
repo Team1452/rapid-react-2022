@@ -17,6 +17,14 @@ public class Intake {
      * Sync motors with interal Intake state
      * to be called in periodic methods by Robot
      */
+    public void turnOn() {
+        set(0.5);
+    }
+
+    public void turnOff() {
+        set(0.0);
+    }
+
     public void set(double speed) {
         // handle intake mode
         switch (intakeMode) {
