@@ -1,5 +1,6 @@
 package frc.robot;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auton.Auton;
+import frc.robot.auton.AutonSequence;
+import frc.robot.auton.Motion;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
@@ -56,8 +59,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         // TODO: get tarmac from Shuffleboard
-        auton = new Auton(Tarmac.LEFT_BOTTOM, drivetrainController);
-        auton.start();
+        auton = new Auton(Tarmac.LEFT_MIDDLE, drivetrainController, intake);
     }
 
     /** This function is called periodically during autonomous. */
@@ -99,9 +101,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        auton = new Auton(drivetrainController, new Position(new Location(0, 0), 0));
-
-        auton.navigate(new Location(51, 51));
+        auton = new Auton(
+            new AutonSequence(
+                /* TODO */ new Position(new Location(0, 0), 0),
+                Arrays.asList(
+                    new Motion.SetIntake(true),
+                    new Motion.MoveTo(new Location(198, 74)),
+                    new Motion.MoveTo(new Location(324, 150)),
+                    new Motion.LiftAndShoot()
+                )
+            ),
+            drivetrainController,
+            intake
+        );
     }
 
     @Override
