@@ -1,63 +1,58 @@
 package frc.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.RobotMap;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class Intake {
     // motors
-    // private final CANSparkMax lift, intake;
+    private final CANSparkMax lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushed);
+    private final CANSparkMax intake = new CANSparkMax(RobotMap.INTAKE_MOTOR_INTAKE, MotorType.kBrushless);
     private IntakeMode intakeMode = IntakeMode.INWARD;
 
-    // intake state
-    private LiftPosition position;
+    private LiftPosition currentLiftPosition;
+    
+    // limit switches
+    private final DigitalInput liftBottomLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_BOTTOM);
+    private final DigitalInput liftTopLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_TOP);
 
-    public Intake() {
-        // lift = new CANSparkMax(RobotMap.INTAKE_MOTOR_LIFT, MotorType.kBrushless);
-        // intake = new CANSparkMax(RobotMap.INTAKE_MOTOR_INTAKE, MotorType.kBrushless);
+    public enum LiftPosition { HIGH, LOW }
+    public enum IntakeMode { IDLE, INWARD, OUTWARD }
+
+    private final static double LIFT_SPEED = 0.1;
+    private final static double INTAKE_SPEED = 0.1;
+
+    public void setIntake(IntakeMode mode) {
+        double speed = mode == IntakeMode.IDLE 
+            ? 0
+            : mode == IntakeMode.INWARD
+                ? -INTAKE_SPEED
+                : INTAKE_SPEED;
+        intake.set(speed);
     }
 
-    /**
-     * Sync motors with interal Intake state
-     * to be called in periodic methods by Robot
-     */
-    public void turnOn() {
-        set(0.5);
+    public void setCurrentPosition(LiftPosition position) {
+        currentLiftPosition = position;
     }
 
-    public void turnOff() {
-        set(0.0);
+    public void toggleLiftPosition() {
+        currentLiftPosition = currentLiftPosition == LiftPosition.HIGH ? LiftPosition.LOW : LiftPosition.HIGH;
     }
 
-    public void set(double speed) {
-        // handle intake mode
-        switch (intakeMode) {
-            case INWARD:
-                speed = -speed;
-                break; 
-            case OUTWARD: 
+    public void updateLift() {
+        switch (currentLiftPosition) {
+            case HIGH:
+                if (!liftTopLimit.get()) lift.set(LIFT_SPEED);
+                else lift.set(0);
                 break;
-            default:
-                System.err.println("Unhandled IntakeMode in Intake: " + intakeMode);
-                return;
+            case LOW:
+                if (!liftBottomLimit.get()) lift.set(-LIFT_SPEED);
+                else lift.set(0);
+                break;
         }
-        
-        // intake.set(speed);
     }
 
-    public void stop() {
-        // intake.set(0);
-    }
-
-    /**
-     * Toggle direction from inward/outward
-     */
-    public void toggleDirection(){
-        intakeMode = intakeMode == IntakeMode.INWARD 
-            ? IntakeMode.OUTWARD 
-            : IntakeMode.INWARD;
-    }
-
-    /**
-     * Getters/setters
-     */
     public IntakeMode getMode() { return intakeMode; }
     public void setMode(IntakeMode mode) { intakeMode = mode; }
-    public void setPosition(LiftPosition pos) { position = pos; }
 }

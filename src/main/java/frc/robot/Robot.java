@@ -15,6 +15,7 @@ import frc.robot.auton.Motion;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
+import frc.subsystems.Intake.IntakeMode;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -88,13 +89,27 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // update drivetrain
-        double speed = -Math.pow(controller.getRightY(), 3) * 0.6;
+        double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrainController.update(speed, turn);
 
+        // intake
+        IntakeMode intakeMode = controller.getLeftBumperPressed()
+            ? IntakeMode.INWARD
+            : controller.getRightBumperPressed()
+                ? IntakeMode.OUTWARD
+                : IntakeMode.IDLE;
+
         // update intake
-        // intake.set(controller.getLeftTriggerAxis());
+        intake.setIntake(intakeMode);
+
+        // update lift
+        if (controller.getAButtonPressed()) {
+            intake.toggleLiftPosition();
+        }
+
+        intake.updateLift();
     }
 
     @Override
