@@ -124,6 +124,8 @@ public class Robot extends TimedRobot {
         // UPDATE CLIMB
         double climbSpeed = Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
         climb.lift(climbSpeed);
+
+        
     }
 
     @Override
