@@ -9,6 +9,7 @@ import frc.robot.Location;
 import frc.robot.Position;
 import frc.robot.Tarmac;
 import frc.robot.auton.Motion.MoveTo;
+import frc.subsystems.Intake.IntakeMode;
 
 /**
  * Constant global data carrier to hold auton sequences/starting positions
@@ -29,7 +30,7 @@ public class AutonSequences {
                 20.5, 20.6, Math.toRadians(38.5),
 
                 // motions
-                new Motion.SetIntake(true),
+                new Motion.SetIntake(IntakeMode.INWARD),
                 new Motion.MoveTo(new Location(198, 74)),
                 new Motion.MoveTo(new Location(324, 150)),
                 new Motion.LiftAndShoot()
@@ -42,7 +43,7 @@ public class AutonSequences {
                 20.5, 20.6, Math.toRadians(38.5),
 
                 // motions
-                new Motion.SetIntake(true),
+                new Motion.SetIntake(IntakeMode.INWARD),
                 new Motion.MoveTo(new Location(198, 74)),
                 new Motion.MoveTo(new Location(324, 150)),
                 new Motion.LiftAndShoot()
@@ -54,7 +55,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()
@@ -66,7 +67,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()
@@ -78,7 +79,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()
@@ -90,7 +91,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()
@@ -102,7 +103,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()
@@ -114,7 +115,7 @@ public class AutonSequences {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()

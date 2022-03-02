@@ -1,8 +1,6 @@
 package frc.robot;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
@@ -10,14 +8,13 @@ import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.auton.Auton;
 import frc.robot.auton.AutonSequence;
-import frc.robot.auton.AutonSequences;
 import frc.robot.auton.Motion;
+import frc.subsystems.Climb;
 import frc.subsystems.Drivetrain;
 import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
 import frc.subsystems.Intake.IntakeMode;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -38,7 +35,12 @@ public class Robot extends TimedRobot {
     private final Drivetrain drivetrain = new Drivetrain();
     private final DrivetrainController drivetrainController = new DrivetrainController(drivetrain);
     private final Intake intake = new Intake();
+    private final Climb climb = new Climb();
     private Auton auton;
+
+    // store state of last time X button was checked
+    // on the XboxController for toggling intake lift
+    private boolean lastXButtonPressed = false;
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -50,13 +52,18 @@ public class Robot extends TimedRobot {
         // start camera stream for USB camera
         UsbCamera camera = CameraServer.startAutomaticCapture();
         camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
-        // Add commands to the autonomous command chooser
+
+        // make tarmac selectable
         SendableChooser<Tarmac> autonomousChooser = new SendableChooser<>();
-        autonomousChooser.setDefaultOption("Simple Auto", Tarmac.RIGHT_BOTTOM);
-        autonomousChooser.addOption("Complex Auto", Tarmac.LEFT_BOTTOM);
+
+        for (Tarmac tarmac : Tarmac.values())
+            autonomousChooser.addOption(tarmac.name(), tarmac);
+
         SmartDashboard.putData(autonomousChooser);
-        Field2d autoFieldBack = new Field2d();
-        SmartDashboard.putData(autoFieldBack);
+
+        // TODO: add in field map
+        // Field2d autoFieldBack = new Field2d();
+        // SmartDashboard.putData(autoFieldBack);
     }
 
     /** Called every PERIODIC_INTERVAL */
@@ -88,28 +95,35 @@ public class Robot extends TimedRobot {
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
-        // update drivetrain
+        // UPDATE DRIVETRAIN
         double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
         double turn = Math.pow(controller.getLeftX(), 3);
 
         drivetrainController.update(speed, turn);
 
-        // intake
+        // UPDATE INTAKE
         IntakeMode intakeMode = controller.getLeftBumperPressed()
             ? IntakeMode.INWARD
             : controller.getRightBumperPressed()
                 ? IntakeMode.OUTWARD
                 : IntakeMode.IDLE;
 
-        // update intake
+        // ball intake
         intake.setIntake(intakeMode);
 
-        // update lift
-        if (controller.getAButtonPressed()) {
+        // intake lift
+        if (controller.getXButtonPressed() && !lastXButtonPressed) {
+            // if X button is pressed when previously unpressed,
+            // then toggle lift
             intake.toggleLiftPosition();
         }
 
+        lastXButtonPressed = controller.getXButtonPressed();
         intake.updateLift();
+
+        // UPDATE CLIMB
+        double climbSpeed = Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
+        climb.lift(climbSpeed);
     }
 
     @Override
@@ -131,7 +145,7 @@ public class Robot extends TimedRobot {
             new AutonSequence(
                 /* TODO */ new Position(new Location(0, 0), 0),
                 Arrays.asList(
-                    new Motion.SetIntake(true),
+                    new Motion.SetIntake(IntakeMode.INWARD),
                     new Motion.MoveTo(new Location(198, 74)),
                     new Motion.MoveTo(new Location(324, 150)),
                     new Motion.LiftAndShoot()

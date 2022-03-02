@@ -3,6 +3,7 @@ package frc.robot.auton;
 import frc.robot.Location;
 import frc.robot.Position;
 import frc.subsystems.Intake;
+import frc.subsystems.Intake.IntakeMode;
 
 public abstract class Motion {
     public abstract void accept(AutonState state);
@@ -82,16 +83,15 @@ public abstract class Motion {
     }
 
     public static class SetIntake extends Motion {
-        boolean on;
+        IntakeMode mode;
 
-        public SetIntake(boolean on) { this.on = on; }
+        public SetIntake(IntakeMode mode) {
+            this.mode = mode;
+        }
 
         @Override
         public void accept(AutonState state) {
-            Intake intake = state.getIntake();
-
-            if (on) intake.turnOn();
-            else intake.turnOff();
+            state.getIntake().setIntake(mode);
         }
     }    
 }
