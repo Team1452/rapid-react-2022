@@ -28,8 +28,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-    // run periodic methods every 20ms
-    public static final double PERIODIC_INTERVAL = 20;
+    // run periodic methods every 30ms
+    private static final double PERIODIC_INTERVAL = 30;
 
     private final XboxController controller = new XboxController(RobotMap.XBOX_CONTROLLER);
     private final Drivetrain drivetrain = new Drivetrain();

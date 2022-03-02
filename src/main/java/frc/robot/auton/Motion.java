@@ -1,7 +1,7 @@
 package frc.robot.auton;
 
 import frc.robot.Location;
-import frc.robot.Robot;
+import frc.robot.Position;
 import frc.subsystems.Intake;
 import frc.subsystems.Intake.IntakeMode;
 
@@ -18,31 +18,6 @@ public abstract class Motion {
         @Override
         public void accept(AutonState state) {
             state.getDrivetrainController().rotateRadians(angle);
-        }
-    }
-
-    public static class Nop extends Motion {
-        @Override
-        public void accept(AutonState state) {
-            // do nothing
-        }
-    }
-
-    public static class Wait extends Motion {
-        private double ms;
-
-        public Wait(double ms) {
-            this.ms = ms;
-        }
-
-        @Override
-        public void accept(AutonState state) {
-            // takes Robot.PERIODIC_INTERVAL for Auton
-            // event loop to process each new motion,
-            // so Auton does no more operations for
-            // Robot.PERIODIC_INTERVAL * # of Nops miliseconds
-            for (int i = 0; i < ms / Robot.PERIODIC_INTERVAL; i++)
-                state.addMotion(new Motion.Nop());
         }
     }
 
