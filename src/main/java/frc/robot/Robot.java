@@ -15,8 +15,6 @@ import frc.subsystems.DrivetrainController;
 import frc.subsystems.Intake;
 import frc.subsystems.Intake.IntakeMode;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -38,8 +36,6 @@ public class Robot extends TimedRobot {
     private final Climb climb = new Climb();
     private Auton auton;
 
-    private enum RightJoystickControlMode { CLIMB, INTAKE }
-
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -51,18 +47,6 @@ public class Robot extends TimedRobot {
         // start camera stream for USB camera
         UsbCamera camera = CameraServer.startAutomaticCapture();
         camera.setVideoMode(VideoMode.PixelFormat.kMJPEG, 1280, 720, 30);
-
-        // make tarmac selectable
-        SendableChooser<Tarmac> autonomousChooser = new SendableChooser<>();
-
-        for (Tarmac tarmac : Tarmac.values())
-            autonomousChooser.addOption(tarmac.name(), tarmac);
-
-        SmartDashboard.putData(autonomousChooser);
-
-        // TODO: add in field map
-        // Field2d autoFieldBack = new Field2d();
-        // SmartDashboard.putData(autoFieldBack);
     }
 
     /** Called every PERIODIC_INTERVAL */
@@ -91,46 +75,68 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
     }
 
-    // store mode of right joystick for teleop
+    // teleop state
+    private enum RightJoystickControlMode { CLIMB, INTAKE }
+    private enum DriveMode { FAST, SLOW }
+
     private RightJoystickControlMode curRightJoystickControlMode = RightJoystickControlMode.INTAKE;
+    private DriveMode driveMode = DriveMode.FAST;
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
         // UPDATE DRIVETRAIN
-        double speed = -Math.pow(controller.getLeftY(), 3) * 0.6;
-        double turn = Math.pow(controller.getLeftX(), 3);
+        
+        // drivetrain mode
+        if (controller.getYButtonPressed()) {
+            driveMode = driveMode == DriveMode.FAST ? DriveMode.SLOW : DriveMode.FAST;
+        }
+
+        double speed = -Math.pow(controller.getLeftY(), 5) * 0.6;
+        if (driveMode == DriveMode.SLOW) speed *= 0.25; 
+
+        double turn = Math.pow(controller.getLeftX(), 5);
+        if (driveMode == DriveMode.SLOW) turn *= 0.25;
 
         drivetrainController.update(speed, turn);
 
         // UPDATE INTAKE
-        IntakeMode intakeMode = controller.getLeftBumperPressed()
+        IntakeMode intakeMode = controller.getLeftTriggerAxis() > 0.1
             ? IntakeMode.INWARD
-            : controller.getRightBumperPressed()
+            : controller.getRightTriggerAxis() > 0.1
                 ? IntakeMode.OUTWARD
                 : IntakeMode.IDLE;
+
+        System.out.println("INTAKE MODE: " + intakeMode);
 
         // ball intake
         intake.setIntake(intakeMode);
 
-        // UPDATE CLIMB/LIFT DEPENDING ON CONTROLLER STATUS
+        // switch to climb mode if B button pressed
         if (controller.getBButtonPressed()) {
             // stop intake
             intake.stopLift();
 
             // if B button pressed then joystick controls climb
             curRightJoystickControlMode = RightJoystickControlMode.CLIMB;
+            
+            // update gui
+            GUI.setToClimbMode();
         }
 
+        // switch to intake mode if X button pressed
         if (controller.getXButtonPressed()) {
             // stop climb
             climb.stop();
 
             // if X button pressed then joystick controls intake
             curRightJoystickControlMode = RightJoystickControlMode.INTAKE;
+
+            // update gui
+            GUI.setToIntakeMode();
         }
 
-        double rightJoystickSpeed = Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
+        double rightJoystickSpeed = -Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
 
         switch (curRightJoystickControlMode) {
             case CLIMB: climb.lift(rightJoystickSpeed); break;

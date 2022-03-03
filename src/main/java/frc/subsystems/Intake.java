@@ -20,15 +20,19 @@ public class Intake {
     public enum LiftPosition { HIGH, LOW }
     public enum IntakeMode { IDLE, INWARD, OUTWARD }
 
-    private final static double LIFT_SPEED = 0.1;
-    private final static double INTAKE_SPEED = 0.1;
+    // private final static double LIFT_SPEED = 0.1;
+    private final static double INTAKE_SPEED = 0.3;
+    private final static double OUTTAKE_SPEED = 1;
 
     public void setIntake(IntakeMode mode) {
-        double speed = mode == IntakeMode.IDLE 
-            ? 0
-            : mode == IntakeMode.INWARD
-                ? -INTAKE_SPEED
-                : INTAKE_SPEED;
+        double speed = -1; // initial value not used for anything
+
+        switch (mode) {
+            case IDLE: speed = 0; break;
+            case INWARD: speed = INTAKE_SPEED; break;
+            case OUTWARD: speed = -OUTTAKE_SPEED; break;
+        }
+
         intake.set(speed);
     }
 
