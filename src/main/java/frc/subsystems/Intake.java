@@ -14,8 +14,8 @@ public class Intake {
     private LiftPosition currentLiftPosition;
     
     // limit switches
-    private final DigitalInput liftBottomLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_BOTTOM);
-    private final DigitalInput liftTopLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_TOP);
+    // private final DigitalInput liftBottomLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_BOTTOM);
+    // private final DigitalInput liftTopLimit = new DigitalInput(RobotMap.INTAKE_LIMIT_TOP);
 
     public enum LiftPosition { HIGH, LOW }
     public enum IntakeMode { IDLE, INWARD, OUTWARD }
@@ -40,18 +40,26 @@ public class Intake {
         currentLiftPosition = currentLiftPosition == LiftPosition.HIGH ? LiftPosition.LOW : LiftPosition.HIGH;
     }
 
-    public void updateLift() {
-        switch (currentLiftPosition) {
-            case HIGH:
-                if (!liftTopLimit.get()) lift.set(LIFT_SPEED);
-                else lift.set(0);
-                break;
-            case LOW:
-                if (!liftBottomLimit.get()) lift.set(-LIFT_SPEED);
-                else lift.set(0);
-                break;
-        }
+    public void setLift(double speed) {
+        lift.set(speed);
     }
+
+    public void stopLift() {
+        lift.set(0);
+    }
+
+    // public void updateLift() {
+    //     switch (currentLiftPosition) {
+    //         case HIGH:
+    //             if (!liftTopLimit.get()) lift.set(LIFT_SPEED);
+    //             else lift.set(0);
+    //             break;
+    //         case LOW:
+    //             if (!liftBottomLimit.get()) lift.set(-LIFT_SPEED);
+    //             else lift.set(0);
+    //             break;
+    //     }
+    // }
 
     public IntakeMode getMode() { return intakeMode; }
     public void setMode(IntakeMode mode) { intakeMode = mode; }

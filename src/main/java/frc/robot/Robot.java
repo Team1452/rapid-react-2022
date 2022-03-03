@@ -38,9 +38,8 @@ public class Robot extends TimedRobot {
     private final Climb climb = new Climb();
     private Auton auton;
 
-    // store state of last time X button was checked
-    // on the XboxController for toggling intake lift
-    private boolean lastXButtonPressed = false;
+    private enum RightJoystickControlMode { CLIMB, INTAKE }
+
 
     public Robot() {
         super(PERIODIC_INTERVAL / 1000);
@@ -92,6 +91,9 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
     }
 
+    // store mode of right joystick for teleop
+    private RightJoystickControlMode curRightJoystickControlMode = RightJoystickControlMode.INTAKE;
+
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {
@@ -111,21 +113,29 @@ public class Robot extends TimedRobot {
         // ball intake
         intake.setIntake(intakeMode);
 
-        // intake lift
-        if (controller.getXButtonPressed() && !lastXButtonPressed) {
-            // if X button is pressed when previously unpressed,
-            // then toggle lift
-            intake.toggleLiftPosition();
+        // UPDATE CLIMB/LIFT DEPENDING ON CONTROLLER STATUS
+        if (controller.getBButtonPressed()) {
+            // stop intake
+            intake.stopLift();
+
+            // if B button pressed then joystick controls climb
+            curRightJoystickControlMode = RightJoystickControlMode.CLIMB;
         }
 
-        lastXButtonPressed = controller.getXButtonPressed();
-        intake.updateLift();
+        if (controller.getXButtonPressed()) {
+            // stop climb
+            climb.stop();
 
-        // UPDATE CLIMB
-        double climbSpeed = Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
-        climb.lift(climbSpeed);
+            // if X button pressed then joystick controls intake
+            curRightJoystickControlMode = RightJoystickControlMode.INTAKE;
+        }
 
-        
+        double rightJoystickSpeed = Math.signum(controller.getRightY()) * Math.pow(controller.getRightY(), 2);
+
+        switch (curRightJoystickControlMode) {
+            case CLIMB: climb.lift(rightJoystickSpeed); break;
+            case INTAKE: intake.setLift(rightJoystickSpeed); break;
+        }
     }
 
     @Override

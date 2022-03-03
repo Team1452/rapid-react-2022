@@ -11,4 +11,8 @@ public class Climb {
     public void lift(double speed) {
         lift.set(speed);
     }
+
+    public void stop() {
+        lift.set(0);
+    }
 } 
